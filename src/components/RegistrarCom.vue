@@ -21,7 +21,7 @@
 			</div>
 	<div class="row">
    		<form class="col s12"  :action="url1">
-               <p v-if="mostrar">{{msg}}</p>      <!-- esto es lo que digo que no se quiere mostrar, el if no hace caso -->
+               <p v-if="mostrar">{{msg}}</p>  
       		<div class="row">
 				<div class="input-field col s12 m6">
          			 <i class="material-icons prefix">email</i>
@@ -71,7 +71,6 @@
                      <v-text-area name="contenido" id="contenido" length="50" v-model="userCom" required></v-text-area>
                      <label for="text"><i class="material-icons">pin_drop</i>Dirección</label>
                 </div>
-                <input id="volv"  type="text" :value="url1">
                  </div>
             <div class="center"> <button class="button--light btn1" modifier="large" type="submit" @click="submit()" >REGISTRAR</button> </div>
    		 </form>
@@ -93,7 +92,7 @@ import auth from '../auth'
      this.getEstado();
      this.getUser();
      var volver = this.getParameterByName('volver');
-      console.log(this.volver1);
+
   },
   //función que se ejecuta al escribir en el input email
    computed:{
@@ -213,8 +212,6 @@ import auth from '../auth'
         if (!results) return null;
         if (!results[2]) return '';
         this.volver1 = decodeURIComponent(results[2].replace(/\+/g, ""));
-
-                //de aqui para abajo es para ver si logro mostrar el mensaje
         if(a && a.length)
         {
             this.mostrar = true;

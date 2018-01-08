@@ -20,7 +20,9 @@
 			</div>
 
 	<div class="row">
-   		<form class="col s12" action="#/reg1" >
+   		
+   		<form class="col s12"  :action="url1">
+               <p v-if="mostrar">{{msg}}</p> 
       		<div class="row">
 				<div class="input-field col s12 m6">
          			 <i class="material-icons prefix">email</i>
@@ -81,8 +83,8 @@
            		</div>
 				   <label>Área a la que se dedica</label>
 			        <div class="center">
-                    <v-ons-select name="area" material class="material" style="width: 80%" v-model="selectedItem" >
-                        <option class="tam" v-for="item in categ" :value="item.value" :key="item.key">
+                    <v-ons-select name="area" material class="material" style="width: 80%" v-model="selectedItem2" >
+                        <option class="tam3" v-for="item in categ" :value="item.value" :key="item.key">
                             {{ item.nombre }}
                         </option>
                     </v-ons-select>
@@ -106,38 +108,49 @@
      this.getEstado();
      this.getCat();
     this.getUser();
+       var volver = this.getParameterByName('volver');
 
   },
-  //función que se ejecuta al escribir en el input email
+//función que se ejecuta al escribir en el input email
    computed:{
      usersFilter: function(){
+         
+       console.log('sii1');
          var inpEm=$("#email").val();
        if(inpEm == "")
        {
            this.show = false
-           
        }
        else{
            this.show = true
-           
        }
        var textSearch = this.textSearch;
-       return this.users.filter(function(el) {
+       var a = this.users.filter(function(el) {
          return el.email.toLowerCase().indexOf(textSearch.toLowerCase()) !== -1;
        });
-       
-     }
+       console.log('sii');
+       this.getUrl(a);
+       return a;
+
+     },
    },
 		data : function() {
         return { 
-      selectedItem: '',
-        ciudad: [],
+        selectedItem: '',
+         selectedItem1: '',
+          selectedItem2: '',
         url: '',
-         estados:[],
-         categ:[],
-      textSearch: "",
-        users: []
-        
+        categ:[],
+        ciudad: [],                    //arreglo que almacena las ciudades del estado seleccionado
+        estados:[],                   //arreglo que almacena los estados
+        textSearch: "",               //utilizado para buscar que el usuario no esté registrado
+        users: [],                    //utilizado para la búsqueda del correo electrónico
+        show: false,
+        volver1: false,
+        mostrar: false,
+        url1:'',
+        msg: 'El correo electrónico que ha proporcionado se encuentra siendo utilizado por otro usuario, por favor intene de nuevo',
+
 
        }
 
@@ -167,7 +180,41 @@
         this.users = response.data
     });
   
-     }
+     },
+          //método para definir la url
+     getUrl: function(a){
+         if(a && a.length){
+             this.volver = true;
+             this.url1="#/registrarente/?volver=true";
+       
+             return "#/registrarente/?volver=true";
+
+         }
+         else{
+             this.url1="#/reg1";
+             return "#/reg1";
+         }
+     },
+     //obtener el valor de volver al momento de renderizar
+      getParameterByName: function(volver, url2) {
+
+      if (!url2) url2 = window.location.href;
+       
+        volver = volver.replace(/[\[\]]./g, "\\$&");
+        var regex = new RegExp("[?&.]" + volver + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url2);
+        if (!results) return null;
+        if (!results[2]) return '';
+        this.volver1 = decodeURIComponent(results[2].replace(/\+/g, ""));
+        if(a && a.length)
+        {
+            this.mostrar = true;
+        }
+        else{
+            this.mostrar = false;
+        }
+
+    },
    }
     }
 
