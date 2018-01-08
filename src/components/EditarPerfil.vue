@@ -27,7 +27,7 @@
             <br> 
            <v-ons-card v-if="ver">
                  <div class="center">
-                     <img id="myimg"style="width: 80%"></img>
+                     <img id="myimg" style="width: 80%"> </img>
                  </div>
             </v-ons-card>
             <br>

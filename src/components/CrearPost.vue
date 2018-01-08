@@ -27,8 +27,9 @@
                      </v-ons-row>
                  <v-ons-card v-if="value">
                  <div class="center">
-                <img id="myimg"style="width: 80%"></img>
-                    </div>
+                    <img id="myimg" style="width: 80%"></img>
+                
+                </div>
                 </v-ons-card>
                 <br>
                 <div class="row l">
