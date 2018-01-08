@@ -48,14 +48,42 @@
 			
                 <label>Sexo</label>
                 <div class="center">
-                    <v-ons-select name="sexo" material class="material" style="width: 150%" v-model="selectedItem" required>
+                    <v-ons-select name="sexo" material class="material" style="width: 150%" v-model="selectedItem2" required>
                         <option class="tam" v-for="item2 in sexo" :value="item2.value" :key="item2.key">
                             {{ item2.text }}
                         </option>
                     </v-ons-select>
                 </div>
-			<br>
-	  	
+                <br>
+			   <v-ons-row>
+                    <v-ons-col>
+			              <label>Estado</label>
+                    <v-ons-select name="edo" id="edo"  v-on:change="getCiudad()" material class="material" style="width: 80%" v-model="selectedItem" required>
+                        <option class="tam" name="edos" id="edos" v-for="item1 in estados" :value="item1.id" :key="item1.key">
+                            {{ item1.estado }}
+                        </option>
+                    </v-ons-select>
+                    </v-ons-col>
+                </v-ons-row>
+	  	<br>
+           <v-ons-col name="b" id="b">
+
+                     <label>Ciudad</label>
+
+                    <v-ons-select name="ciudad" id="ciudad" material class="material" style="width: 80%"  required >
+                        <option class="tam1" v-for="item2 in ciudad.ciudades" :value="item2.id" :key="item2.key">
+                            {{item2}}
+                        </option>
+                    </v-ons-select>
+
+                    </v-ons-col>
+                <div class="col s12 m12 l6">
+               <div class="input-field">
+                     <v-text-area name="contenido" id="contenido" length="50" v-model="userCom" required></v-text-area>
+                     <label for="text"><i class="material-icons">pin_drop</i>Dirección</label>
+                </div>
+                 </div>
+          <br>
 		 <div class="center"> 
 			 <button class="button--light btn1" modifier="large" type="submit" onclick = "validar()">REGISTRAR</button> </div>
 			
@@ -71,7 +99,10 @@ import {mapGetters} from 'vuex';
 export default {
 	name: 'registro',
     created: function() {
-        this.getUser();
+     this.getEstado();
+    this.getUser();
+        
+    
          var volver = this.getParameterByName('volver');
     },
    //función que se ejecuta al escribir en el input email
@@ -114,7 +145,11 @@ export default {
         mostrar: false,
         url1:'',
         msg: 'El correo electrónico que ha proporcionado se encuentra siendo utilizado por otro usuario, por favor intene de nuevo',
-
+         ciudad: [],                    //arreglo que almacena las ciudades del estado seleccionado
+      estados:[],                   //arreglo que almacena los estados
+         selectedItem: '',
+      selectedItem1: '',
+        selectedItem2: '',
 	}},
 	methods:{
         //método utilizado para llenar el arreglo de users
@@ -157,8 +192,25 @@ export default {
         }
 
     },
-	}
+     //método para buscar llenar el array ciudad con los datos del estado seleccionado
+       getCiudad: function(){
+          this.url='http://127.0.0.1:8000/api/estados/'+this.selectedItem+'/?format=json';
+           axios.get(this.url).then(response =>{
+         this.ciudad = response.data
+
+                });
+
+       },
+       //método que se ejecuta en created para llenar el arreglo estados con los estados de venezuela
+      getEstado: function(){
+          console.log('099')
+       axios.get('http://127.0.0.1:8000/api/estados/?format=json').then(response =>{
+         this.estados = response.data
+       });
+     },
 	
+    },
+      
 };
 </script>
 <style scoped>

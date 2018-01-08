@@ -44,23 +44,23 @@
             
                             <i class="material-icons prefix">account_circle</i>
                             <input id="nombre" type="text" class="validate" :value="user.name">
-                            <label for="nombre">Nombre</label>
+                            <label for="nombre" >Nombre</label>
                         </div>
                         <div class="input-field col s12 m6">
                             <i class="material-icons prefix">person_outline</i>
                             <input id="apellido"  type="text" class="validate" value="">
-                            <label>Apellido</label>
+                            <label for="apellido">Apellido</label>
                         </div>
                       
                         <div class="input-field col s12 m6">
                             <i class="material-icons prefix">sentiment_very_satisfied</i>
                             <input id="descripcion" type="text" class="validate" :value="user.userperfil.info">
-                            <label for="descripcion">Sobre mí</label>
+                            <label for="descripcion" >Sobre mí</label>
                         </div>
                         <div class="input-field col s12 m6">
                             <i class="material-icons prefix"> location_on</i>
                             <input id="direccion" type="text" class="validate" :value="user.direccion">
-                            <label for="direccion">Dirección</label>
+                            <label for="direccion" >Dirección</label>
                         </div>
                     
                     </div>
@@ -100,7 +100,7 @@ import axios from 'axios'
             idUser:'',
             user: [],
              estados:[],                   //arreglo que almacena los estados
-      
+            show: false,
     }
      document.getElementById("im").addEventListener 
          ("click", cameraTakePicture);
@@ -121,6 +121,15 @@ import axios from 'axios'
      
         console.log(this.idUser);
         return this.idUser
+    },
+    valida:function(idI){
+      var inp=$("#"+idI).val()
+ 
+      if(inp == "")
+      {
+         this.show = true
+      }else{
+      this.show = false}
     },
       getUser: function (){
         var url = 'http://127.0.0.1:8000/api/user/'+this.idUser+'/?format=json';

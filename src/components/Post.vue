@@ -2,29 +2,27 @@
 <div class="container" id="app">
      <v-ons-list>
       <v-ons-list-item v-for="item in publicacion" :key="item.link">
-        <v-ons-card>
+        <v-ons-card >
             <div class="pub">
                <div class="img">
                    <img src="../assets/perfil.jpg" style="width: 150% !important;" class="perfil">
                </div>
                 <div class="col">
-                  <div class="f1">
+                 <!-- <div class="f1">
                       <h4>{{p.authenticated}}</h4>
-                  </div>
+                  </div>-->
                   <div class="f2">
                       <h6>Hace 2 minutos</h6>
                   </div>
                 </div>
             </div>
 
-              <img :src="item.avatar" style="width: 100%">
+              <img src="" style="width: 100%">
             <router-link to="/detallepost"><div class="card__imagen posti">
 
-                <img :src='item.avatar' style="width: 100%">
+                <img  style="width: 100%">
             </div></router-link>
             <div class="card_content">
-               {{item.titulo}}
-               {{item.avatar}}
             </div>
             <v-ons-row>
                 <v-ons-col>
@@ -62,7 +60,7 @@ import axios from 'axios'
 export default {
   name: 'post',
    created: function() {
-     this.getPub();
+     this.getPublicac();
   },
 
   components: {
@@ -91,14 +89,21 @@ export default {
       }
   },
   methods: {
-     getPub: function(){
+   /*  getPub: function(){
        axios.get('http://127.0.0.1:8000/api/publicacion/?format=json',{
           headers: {Authorization: `JWT ${auth.getAuthHeader()}`}
        }).then(response =>{
          this.publicacion= response.data
          this.p=auth.getUser();
         });
-      },
+      },*/
+        //método que se ejecuta en created para llenar el arreglo estados con los estados de venezuela
+      getPublicac: function(){
+       axios.get('http://127.0.0.1:8000/api/publicacion/?format=json').then(response =>{
+         this.publicacion = response.data
+       });
+       console.log('ok')
+     },
   },
 
 
