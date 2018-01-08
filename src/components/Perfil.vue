@@ -121,15 +121,15 @@ export default {
           this.show = true;
         }
         var url = 'http://127.0.0.1:8000/api/user/'+this.idUser+'/?format=json';
-        console.log(url);
+     
               axios.get(url).then(response => {
                 this.user = response.data
               });
-        console.log(this.user);
+     
       },
       mostrar: function(url){
          if (!url) url = window.location.href;
-         console.log(url)
+     
          if(url == "http://localhost:3333/#/principal")
          {
            return false
