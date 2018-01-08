@@ -35,31 +35,34 @@
             <div class="row">
                 <form class="col s12" action="#">
                     <div class="row">
+                          <div class="input-field col s12 m6">
+                             <i class="material-icons prefix">email</i>
+                            <input id="correo" type="text" class="validate" :value="user.email" disabled>
+                          
+                        </div>
                         <div class="input-field col s12 m6">
+            
                             <i class="material-icons prefix">account_circle</i>
-                            <input id="nombre" type="text" class="validate">
+                            <input id="nombre" type="text" class="validate" :value="user.name">
                             <label for="nombre">Nombre</label>
                         </div>
                         <div class="input-field col s12 m6">
                             <i class="material-icons prefix">person_outline</i>
-                            <input id="apellido"  type="text" class="validate">
-                            <label for="apellido">Apellido</label>
+                            <input id="apellido"  type="text" class="validate" value="">
+                            <label>Apellido</label>
                         </div>
-                        <div class="input-field col s12 m6">
-                             <i class="material-icons prefix">email</i>
-                            <input id="correo" type="text" class="validate">
-                            <label for="correo">Correo Electrónico</label>
-                        </div>
+                      
                         <div class="input-field col s12 m6">
                             <i class="material-icons prefix">sentiment_very_satisfied</i>
-                            <input id="descripcion" type="text" class="validate">
+                            <input id="descripcion" type="text" class="validate" :value="user.userperfil.info">
                             <label for="descripcion">Sobre mí</label>
                         </div>
                         <div class="input-field col s12 m6">
                             <i class="material-icons prefix"> location_on</i>
-                            <input id="direccion" type="text" class="validate">
+                            <input id="direccion" type="text" class="validate" :value="user.direccion">
                             <label for="direccion">Dirección</label>
                         </div>
+                    
                     </div>
                 </form>
             </div>
@@ -79,7 +82,14 @@
 
 </template>
 <script>
+import axios from 'axios'
  export default {
+      created(){
+      var id = this.getParameterByName('id');
+      this.getUser();
+      
+      
+   },
      name: 'editarperfil',
      
      data:function(){
@@ -87,11 +97,9 @@
       return{
           ver:{type:Boolean, default:false},
           ver:false,
-      nombre: 'Andrea',
-      apellido: '',
-      correo: 'andrea123@gmail.com',
-      descripcion: 'Licenciada en Educación',
-      direccion:''
+            idUser:'',
+            user: [],
+             estados:[],                   //arreglo que almacena los estados
       
     }
      document.getElementById("im").addEventListener 
@@ -102,6 +110,27 @@
    
       
    methods: {
+         getParameterByName: function(id, url) {
+      if (!url) url = window.location.href;
+        id = id.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + id + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        this.idUser = decodeURIComponent(results[2].replace(/\+/g, " "));
+     
+        console.log(this.idUser);
+        return this.idUser
+    },
+      getUser: function (){
+        var url = 'http://127.0.0.1:8000/api/user/'+this.idUser+'/?format=json';
+        
+              axios.get(url).then(response => {
+                this.user = response.data
+              });
+        console.log('this.user');
+      },
+      
               camara()
               {
                   this.ver=true;

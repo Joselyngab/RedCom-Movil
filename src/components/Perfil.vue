@@ -22,13 +22,13 @@
           <v-ons-list-item>Mi Estado actual es: {{user.userperfil.estado}}</v-ons-list-item>
           
         </v-ons-list>
-        <div>
+        <div v-if="show">
            <router-link :to="url"><v-ons-button class="material" style="border-radius:50%; 
                                                   position: absolute; 
                                                   right: 16px; 
                                                   top:8px;"
                                                  >
-             <v-ons-icon icon="md-edit"></v-ons-icon></v-ons-button></router-link>
+             <v-ons-icon icon="md-edit" ></v-ons-icon></v-ons-button></router-link>
         </div>
         <div class="boton">
         <v-ons-button  modifier="material" class="button button--light" @click="showModal">{{user.seguidos.length}} Seguidos</v-ons-button>
@@ -88,7 +88,8 @@ export default {
       modalVisible1:false,
       idUser:'',
       user: [],
-      utl: ''
+      url: '',
+      show: false
       
       
     }
@@ -117,6 +118,7 @@ export default {
            if (this.idUser == "")
         {
           this.idUser = "5a4bfc1601f12f216cfa54e0";
+          this.show = true;
         }
         var url = 'http://127.0.0.1:8000/api/user/'+this.idUser+'/?format=json';
         console.log(url);
