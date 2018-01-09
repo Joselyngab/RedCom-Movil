@@ -6,6 +6,7 @@ const API_URL = 'http://localhost:8000/'
 const LOGIN_URL = API_URL + 'api-token-auth/'
 const SIGNUP_URL = API_URL + 'rest-auth/registration/'
 const GETUSER_URL = API_URL + 'api/user/?format=json'
+const POST_URL = API_URL + 'api/publicacion/'
     //axios.defaults.headers.post['Content-Type'] = 'application/json';
 export default {
 
@@ -134,6 +135,17 @@ export default {
     getUser() {
         return this.user;
     },
+
+    // Metodo para crear una nueva publicacion
+
+    createPost(datos, route) {
+        axios.post(POST_URL, datos).then(response => {
+            this.alma = true;
+            window.alert(this.alma)
+        }).catch(error => {
+            console.log(error)
+        });
+    }
 
 }
 export function requireAuth(to, from, next) {

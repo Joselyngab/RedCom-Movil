@@ -77,22 +77,22 @@
                      </div>
                     <label>Ciudad</label>
                     <div class="center">
-                   <v-ons-select name="ciudad" id="ciudad" material class="material" style="width: 80%" v-model="selectedItem1" required >
-                        <option class="tam1" v-for="item2 in ciudad.ciudades" :value="item2.id" :key="item2.key" >
+                   <v-ons-select name="ciudad" id="ciudad" material class="material" style="width: 80%" v-model="post.ciudad" required >
+                        <option default="seleccione" class="tam1" v-for="item2 in ciudad.ciudades" :value="item2" :key="item2.key" >
                             {{item2}}
                         </option>
                     </v-ons-select>
                      </div>
                         <div class="col s12 m12 l6">
                         <div class="input-field">
-                            <v-text-area name="contenido" id="contenido" length="50" v-model="contenido"></v-text-area>
+                            <v-text-area name="contenido" id="contenido" length="50" v-model="post.direccion"></v-text-area>
                             <label for="text">Dirección</label>
                         </div>
                      </div>
 
                 <section style="margin: 20px"></section>
                 <div class="center">
-                <router-link to="/principal" ><v-ons-button  modifier="material large" class="button button--light" style="margin: 6px 0">Publicar</v-ons-button></router-link>
+                <v-ons-button  modifier="material large" class="button button--light" style="margin: 6px 0" @click="submit()">Publicar</v-ons-button>
                 </div>
 
                     <div id="deviceready" class="blink">
@@ -108,37 +108,57 @@
 
 <script>
     import axios from 'axios'
+    import auth from '../auth'
 export default {
    name: 'crearpost',
   created: function() {
      this.getEstado();
      this.getCat();
-
+    this.getUserCon();
       },
    data : function() {
         return {
             value:{type:Boolean},
             value:false,
-            titulo:{type:String},
+            post:{
             titulo:'',
             imagen:{type:File},
-            contenido:{type:String},
-            categoria:{type:Boolean},
-         selectedItem: '',
-         selectedItem1: '',
-          selectedItem2: '',
+            contenido:'',
+            categoria:'',
+            estado:'',
+            ciudad:'' ,
+            direccion:'',
+            },
         url: '',
         categ:[],
         ciudad: [],                    //arreglo que almacena las ciudades del estado seleccionado
         estados:[],                   //arreglo que almacena los estados
-
+        user:{}
        }
-
-         document.getElementById("im").addEventListener
-         ("click", cameraTakePicture);
 
    },
    methods: {
+     submit(){
+       var post={
+         categoria:this.post.categoria,
+         img:this.post.imagen,
+         tags:[],
+         contenido:this.post.contenido,
+         activa:true,
+         direccion:this.post.direccion,
+         autor:this.user.id,
+         respaldos:[],
+         ciudad:this.post.ciudad,
+         likes:null,
+         titulo:this.post.titulo,
+         estado:this.post.estado,
+         comentarios:[]
+       }
+       auth.createPost(post,'/Principal')
+     },
+     getUserCon(){
+       this.user=auth.getUser();
+     },
 
         getCiudad: function(){
           this.url="http://127.0.0.1:8000/api/estados/"+this.selectedItem+"/?format=json";
