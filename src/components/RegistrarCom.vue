@@ -21,11 +21,7 @@
 			</div>
 	<div class="row">
    		<form class="col s12"  :action="url1">
-<<<<<<< HEAD
                <p v-if="mostrar">{{msg}}</p>
-=======
-               <p v-if="mostrar">{{msg}}</p>  
->>>>>>> 36c5b300fa7f53c5cfc5098afaa6f3b013e81348
       		<div class="row">
 				<div class="input-field col s12 m6">
          			 <i class="material-icons prefix">email</i>
