@@ -6,13 +6,13 @@ const API_URL = 'http://localhost:8000/'
 const LOGIN_URL = API_URL + 'api-token-auth/'
 const SIGNUP_URL = API_URL + 'rest-auth/register/'
 const GETUSER_URL = API_URL + 'api/user/?format=json'
-
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 export default {
 
     //Objeto usuario que se instancia en el sistema
 
     user: {
-        _id: '',
+        id: '',
         _cls: '',
         email: '',
         slug: '',
@@ -28,17 +28,24 @@ export default {
         telefono_contacto: 0,
         a_intereses: Array,
         telefono: 0,
+        responsable: '',
+        area_dedicada: '',
         seguidores: Array,
         seguidos: Array,
         notificaciones: Array,
         modificado: { type: Date },
         activo: true,
-        userperfil: '',
+        userperfil: {
+            avatar: '',
+            info: '',
+            estado: '',
+        },
         authenticated: false
     },
     users: { type: Array },
     users: [],
     valido: false,
+    alma: false,
 
     //Envia una solicitud para iniciar sesion y validar usuario y obtener el token de acceso  JWT
     login(creds, redirect) {
@@ -52,15 +59,79 @@ export default {
 
     // Metodo que realiza la insersion de un nuevo usuario en el sistema
 
-    signup(creds, redirect) {
+    signup(creds, redirect, data) {
         axios.post(SIGNUP_URL, creds).then(response => {
-            //localStorage.setItem('id_token', response.data.id)
-            //localStorage.setItem('access_token', response.data.key)
-            this.user.authenticated == true;
-            window.alert(this.user.authenticated);
-            // router.push(redirect);
-
+            console.log('Listo')
+        }).catch(error => {
+            console.log(error)
         });
+        //if (data.cls == 'User.Persona') {
+        /*   axios.post(GETUSER_URL, {
+                _cls: data.cls,
+                email: data.email,
+                name: data.name,
+                password: data.password,
+                estado: data.estado,
+                ciudad: data.ciudad,
+                direccion: data.direccion,
+                apellido: data.apellido,
+                genero: data.genero,
+                edad: data.edad,
+                activo: true,
+                userperfil: {
+                    avatar: 'avatar-persona.png',
+                    info: 'nuevo en la aplicacion',
+                }
+            }).then(response => {
+                this.alma == true;
+                window.alert(this.alma);
+            })
+        }*/
+        // if (data.cls == 'User.Comunidad') {
+        axios.post(GETUSER_URL, {
+            data: {
+                email: data.email,
+                name: data.name,
+                password: data.password,
+                estado: data.estado,
+                ciudad: data.ciudad,
+                direccion: data.direccion,
+                activo: true,
+                _cls: data.cls,
+                userperfil: {
+                    avatar: 'avatar-comunidad.png',
+                    info: 'nuevo en la aplicacion',
+                }
+            }
+        }).then(response => {
+            this.alma = true;
+        }).catch(error => {
+            window.alert(error)
+        });
+        /*
+        if (data.cls == 'User.Ente') {
+            axios.post(GETUSER_URL, {
+                _cls: data.cls,
+                email: data.email,
+                name: data.name,
+                password: data.password,
+                estado: data.estado,
+                ciudad: data.ciudad,
+                direccion: data.direccion,
+                telefono: 0,
+                areadedicada: data.area,
+                activo: true,
+                userperfil: {
+                    avatar: 'avatar-ente.png',
+                    info: 'nuevo en la aplicacion',
+                }
+            }).then(response => {
+                this.alma == true;
+                window.alert(this.alma)
+            })
+        }*/
+        window.alert(this.alma);
+        router.push(redirect);
     },
 
     // Remueve el token al salir del sistema
