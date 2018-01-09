@@ -19,7 +19,8 @@
 				<h3 style="color: rgb(10, 160, 152);">Registro de Personas</h3>
 			</div>
 	<div class="row">
-   		<form class="col s12">
+   				<form class="col s12"  :action="url1">
+               <p v-if="mostrar">{{msg}}</p>
       		<div class="row">
 				<div class="input-field col s12 m6">
          			 <i class="material-icons prefix">email</i>
@@ -47,14 +48,42 @@
 			
                 <label>Sexo</label>
                 <div class="center">
-                    <v-ons-select name="sexo" material class="material" style="width: 150%" v-model="selectedItem" required>
+                    <v-ons-select name="sexo" material class="material" style="width: 150%" v-model="selectedItem2" required>
                         <option class="tam" v-for="item2 in sexo" :value="item2.value" :key="item2.key">
                             {{ item2.text }}
                         </option>
                     </v-ons-select>
                 </div>
-			<br>
-	  	
+                <br>
+			   <v-ons-row>
+                    <v-ons-col>
+			              <label>Estado</label>
+                    <v-ons-select name="edo" id="edo"  v-on:change="getCiudad()" material class="material" style="width: 80%" v-model="selectedItem" required>
+                        <option class="tam" name="edos" id="edos" v-for="item1 in estados" :value="item1.id" :key="item1.key">
+                            {{ item1.estado }}
+                        </option>
+                    </v-ons-select>
+                    </v-ons-col>
+                </v-ons-row>
+	  	<br>
+           <v-ons-col name="b" id="b">
+
+                     <label>Ciudad</label>
+
+                    <v-ons-select name="ciudad" id="ciudad" material class="material" style="width: 80%"  required >
+                        <option class="tam1" v-for="item2 in ciudad.ciudades" :value="item2.id" :key="item2.key">
+                            {{item2}}
+                        </option>
+                    </v-ons-select>
+
+                    </v-ons-col>
+                <div class="col s12 m12 l6">
+               <div class="input-field">
+                     <v-text-area name="contenido" id="contenido" length="50" v-model="userCom" required></v-text-area>
+                     <label for="text"><i class="material-icons">pin_drop</i>Dirección</label>
+                </div>
+                 </div>
+          <br>
 		 <div class="center"> 
 			 <button class="button--light btn1" modifier="large" type="submit" onclick = "validar()">REGISTRAR</button> </div>
 			
@@ -66,12 +95,17 @@
 </template>
 <script>
 import {mapGetters} from 'vuex';
+  import axios from 'axios';
 export default {
 	name: 'registro',
     created: function() {
-        this.getUser();
+     this.getEstado();
+    this.getUser();
+        
+    
+         var volver = this.getParameterByName('volver');
     },
-    //función que se ejecuta al escribir en el input email
+   //función que se ejecuta al escribir en el input email
    computed:{
      usersFilter: function(){
          var inpEm=$("#email").val();
@@ -85,10 +119,11 @@ export default {
            
        }
        var textSearch = this.textSearch;
-       return this.users.filter(function(el) {
+       var a = this.users.filter(function(el) {
          return el.email.toLowerCase().indexOf(textSearch.toLowerCase()) !== -1;
        });
-       
+       this.getUrl(a);
+       return a;
      }
    },
 	data : function() {
@@ -103,12 +138,19 @@ export default {
         { text: 'Femenino', value: 'Femenino' },
         { text: 'Masculino', value: 'Masculino' },
       ],
+        textSearch: "",                //utilizado para buscar que el usuario no esté registrado
+        users: [],                    //utilizado para la búsqueda del correo electrónico
+        show: false,
+        volver1: false,
+        mostrar: false,
+        url1:'',
+        msg: 'El correo electrónico que ha proporcionado se encuentra siendo utilizado por otro usuario, por favor intene de nuevo',
+         ciudad: [],                    //arreglo que almacena las ciudades del estado seleccionado
+      estados:[],                   //arreglo que almacena los estados
+         selectedItem: '',
+      selectedItem1: '',
+        selectedItem2: '',
 	}},
-	computed:{
-		...mapGetters([
-			'nombre'
-		])
-	},
 	methods:{
         //método utilizado para llenar el arreglo de users
      getUser: function(){
@@ -117,9 +159,58 @@ export default {
         this.users = response.data
     });
   
-     }
-	}
+     },
+           //método para definir la url
+     getUrl: function(a){
+         if(a && a.length){
+             this.volver = true;
+             this.url1="#/registrarpersona/?volver=true";
+
+         }
+         else{
+             this.url1="#/reg1";
+         }
+     },
+          //obtener el valor de volver al momento de renderizar
+      getParameterByName: function(volver, url2) {
+
+      if (!url2) url2 = window.location.href;
+       console.log('casi');
+        volver = volver.replace(/[\[\]]./g, "\\$&");
+        var regex = new RegExp("[?&.]" + volver + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url2);console.log('listo1');
+        if (!results) return null;
+        if (!results[2]) return '';
+        this.volver1 = decodeURIComponent(results[2].replace(/\+/g, ""));
+
+        if(a && a.length)
+        {
+            this.mostrar = true;
+        }
+        else{
+            this.mostrar = false;
+        }
+
+    },
+     //método para buscar llenar el array ciudad con los datos del estado seleccionado
+       getCiudad: function(){
+          this.url='http://127.0.0.1:8000/api/estados/'+this.selectedItem+'/?format=json';
+           axios.get(this.url).then(response =>{
+         this.ciudad = response.data
+
+                });
+
+       },
+       //método que se ejecuta en created para llenar el arreglo estados con los estados de venezuela
+      getEstado: function(){
+          console.log('099')
+       axios.get('http://127.0.0.1:8000/api/estados/?format=json').then(response =>{
+         this.estados = response.data
+       });
+     },
 	
+    },
+      
 };
 </script>
 <style scoped>

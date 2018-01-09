@@ -27,8 +27,9 @@
                      </v-ons-row>
                  <v-ons-card v-if="value">
                  <div class="center">
-                <img id="myimg"style="width: 80%"></img>
-                    </div>
+                    <img id="myimg" style="width: 80%"></img>
+                
+                </div>
                 </v-ons-card>
                 <br>
                 <div class="row l">
@@ -52,9 +53,9 @@
                      <v-ons-list-item>
                     <div class="center">
                     <label>¿Con qué área se relaciona esta situación?</label>
-                    <v-ons-select name="area" material class="material" style="width: 80%" v-model="selectedItem1" >
-                        <option class="tam" v-for="item in items" :value="item.value" :key="item.key">
-                            {{ item.text }}
+                      <v-ons-select name="area" material class="material" style="width: 80%" v-model="selectedItem2" >
+                        <option class="tam3" v-for="item in categ" :value="item.value" :key="item.key">
+                            {{ item.nombre }}
                         </option>
                     </v-ons-select>
                     </div>
@@ -68,18 +69,18 @@
 				</div>
                 <label>Estado</label>
                  <div class="center">
-                    <v-ons-select name="edo" material class="material" style="width: 80%" v-model="selectedItem2" >
-                        <option class="tam" v-for="item1 in edos" :value="item1.value" :key="item1.key">
-                            {{ item1.text }}
+                <v-ons-select name="edo" id="edo"  v-on:change="getCiudad()" material class="material" style="width: 80%" v-model="selectedItem" required>
+                        <option class="tam" name="edos" id="edos" v-for="item1 in estados" :value="item1.id" :key="item1.key">
+                            {{ item1.estado }}
                         </option>
                     </v-ons-select>
                 
                      </div>
                     <label>Ciudad</label>
                     <div class="center">
-                    <v-ons-select name="ciudad" material class="material" style="width: 80%" v-model="selectedItem3" >
-                        <option class="tam" v-for="item2 in ciudad" :value="item2.value" :key="item2.key">
-                            {{ item2.text }}
+                   <v-ons-select name="ciudad" id="ciudad" material class="material" style="width: 80%" v-model="selectedItem1" required >
+                        <option class="tam1" v-for="item2 in ciudad.ciudades" :value="item2.id" :key="item2.key" >
+                            {{item2}}
                         </option>
                     </v-ons-select>
                      </div>
@@ -108,9 +109,14 @@
 </template>
 
 <script>
+    import axios from 'axios'
 export default {
    name: 'crearpost',
-
+  created: function() {
+     this.getEstado();
+     this.getCat();
+    
+      },
    data : function() {
         return {
             value:{type:Boolean},
@@ -120,31 +126,13 @@ export default {
             imagen:{type:File},
             contenido:{type:String},
             categoria:{type:Boolean},
-            items: [
-        { text: 'Otra', value: 'Otra' },
-        { text: 'Salud', value: 'Salud' },
-        { text: 'Seguridad', value: 'Seguridad' },
-        { text: 'Arte', value: 'Arte' },
-        { text: 'Alimentación', value: 'Alimentación' }
-      ],
-      edos: [
-        { text: 'Lara', value: 'Lara' },
-        { text: 'Yaracuy', value: 'Yaracuy' },
-        { text: 'Falcón', value: 'Falcón' },
-        { text: 'Zulia', value: 'Zulia'},
-        { text: 'Aragua', value: 'Aragua' }
-      ],
-      
-      ciudad: [
-        { text: 'Barquisimeto', value: 'Barquisimeto' },
-        { text: 'San Felipe', value: 'San Felipe' },
-        { text: 'Coro', value: 'Coro' },
-        { text: 'Maracaibo', value: 'Maracaibo'},
-        { text: 'Maracay', value: 'Maracay' }
-      ],
-      selectedItem1: '',
-      selectedItem2: '',
-      selectedItem3: '',         
+         selectedItem: '',
+         selectedItem1: '',
+          selectedItem2: '',
+        url: '',
+        categ:[],
+        ciudad: [],                    //arreglo que almacena las ciudades del estado seleccionado
+        estados:[],                   //arreglo que almacena los estados
 
        }
        
@@ -153,6 +141,24 @@ export default {
       
    },
    methods: {
+       
+        getCiudad: function(){
+          this.url="http://127.0.0.1:8000/api/estados/"+this.selectedItem+"/?format=json";
+           axios.get(this.url).then(response =>{
+         this.ciudad = response.data
+                }); 
+       },
+       getEstado: function(){
+       axios.get('http://127.0.0.1:8000/api/estados/?format=json').then(response =>{
+         this.estados = response.data
+       });
+
+     },
+     getCat: function(){
+         axios.get('http://localhost:8000/api/categoriapost/?format=json').then(response =>{
+         this.categ = response.data
+       });
+     },
        camara(){
        function cameraTakePicture() { 
    navigator.camera.getPicture(onSuccess, onFail, {  
