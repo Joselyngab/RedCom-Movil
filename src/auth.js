@@ -4,9 +4,9 @@ import decode from 'jwt-decode';
 // URL and endpoint constants
 const API_URL = 'http://localhost:8000/'
 const LOGIN_URL = API_URL + 'api-token-auth/'
-const SIGNUP_URL = API_URL + 'rest-auth/register/'
+const SIGNUP_URL = API_URL + 'rest-auth/registration/'
 const GETUSER_URL = API_URL + 'api/user/?format=json'
-axios.defaults.headers.post['Content-Type'] = 'application/json';
+    //axios.defaults.headers.post['Content-Type'] = 'application/json';
 export default {
 
     //Objeto usuario que se instancia en el sistema
@@ -88,23 +88,9 @@ export default {
             })
         }*/
         // if (data.cls == 'User.Comunidad') {
-        axios.post(GETUSER_URL, {
-            data: {
-                email: data.email,
-                name: data.name,
-                password: data.password,
-                estado: data.estado,
-                ciudad: data.ciudad,
-                direccion: data.direccion,
-                activo: true,
-                _cls: data.cls,
-                userperfil: {
-                    avatar: 'avatar-comunidad.png',
-                    info: 'nuevo en la aplicacion',
-                }
-            }
-        }).then(response => {
+        axios.post('http://localhost:8000/api/user/', data).then(response => {
             this.alma = true;
+            window.alert(this.alma);
         }).catch(error => {
             window.alert(error)
         });
@@ -130,8 +116,8 @@ export default {
                 window.alert(this.alma)
             })
         }*/
-        window.alert(this.alma);
-        router.push(redirect);
+        //window.alert(this.alma);
+        // router.push(redirect);
     },
 
     // Remueve el token al salir del sistema
