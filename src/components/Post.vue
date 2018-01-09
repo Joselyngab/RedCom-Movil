@@ -11,29 +11,29 @@
                  <div class="f1">
                      <!--  <h4>{{p.authenticated}}</h4>-->
                      <h4>{{buscarUser(publ.autor)}}</h4>
-             
+
                   </div>
                   <div class="f2">
-                      
+
                       <h6>Hace 2 minutos</h6>
                   </div>
                 </div>
             </div>
             <div v-on:click="getDetalle(publ.id)">
                 <router-link :to="url">
-                   <h6>Ver detalle de la publicación</h6> 
+                   <h6>Ver detalle de la publicación</h6>
                 </router-link>
             </div>
                     <div class="card__imagen posti" >
-                    
+
                         <img :src="publ.img" style="width: 100%">
-                
-              
+
+
                     </div>
                     <div class="card_content"  >
-                      <p style="color: black;">{{publ.contenido}}</p>   
+                      <p style="color: black;">{{publ.contenido}}</p>
                     </div>
-               
+
             <div class="card_content">
             </div>
             <v-ons-row>
@@ -85,12 +85,12 @@ export default {
 
   data: function() {
     return {
-      
+
         img:{
             type: File,
           },
           img:'',
-          
+
           publicacion:[],
           user: [],
            user1: [],
@@ -114,12 +114,12 @@ export default {
        axios.get('http://127.0.0.1:8000/api/publicacion/?format=json').then(response =>{
          this.publicacion = response.data
        });
-  
-         
-       
+
+
+
      },
      getUser: function(){
-  
+
           axios.get('http://127.0.0.1:8000/api/user/5a4bfc1601f12f216cfa54e0/?format=json').then(response =>{
          this.user1 = response.data
        });
@@ -142,7 +142,7 @@ export default {
                     this.muro.push(this.publicacion[i])
                 }
              }
-            
+
          }
          console.log(this.muro)
      },
@@ -151,11 +151,11 @@ export default {
          this.user = response.data
        });
        return this.user.name
-       
+
      },
        getDetalle: function(id){
-  
-        
+
+
         this.url = '/detallepost/?id='+id;
         console.log(this.url)
     },
@@ -174,7 +174,7 @@ export default {
        });
        console.log('ok2')
       },
-   
+
   },
 
 

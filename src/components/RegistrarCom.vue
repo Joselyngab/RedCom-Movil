@@ -172,7 +172,7 @@ import auth from '../auth'
           email:this.userCom.email,
           notificaciones: []
        }
-       if(!usersFilter && !usersFilter.length){
+       if(this.userCom.email!== ""){
          auth.signup(crede,'/reg1',user)
        }else{
          this.mostrar=true

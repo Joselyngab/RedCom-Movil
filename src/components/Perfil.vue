@@ -5,7 +5,7 @@
                 <router-link to="/principal"><v-ons-back-button style="color: white"></v-ons-back-button></router-link>
             </div>
             <div class="center"  v-if="mostrar()">
-               <img src='../assets/img/rc1.png' style="width: 40px; height:40px; margin-left:0; margin-top:8px;">
+               <img :src="this.imagenUrl" style="width: 40px; height:40px; margin-left:0; margin-top:8px;">
             </div>
         </v-ons-toolbar>
     <v-ons-card>
@@ -78,6 +78,7 @@ export default {
       this.getUser();
       this.url = '/editarperfil/?id=' + this.idUser;
       console.log(this.url)
+      this.imagenurl = '../assets/img' + this.user.userperfil.avatar
    },
   data(){
     return{
@@ -90,8 +91,9 @@ export default {
       idUser:'',
       user: [],
       url: '',
-      show: false
-
+      show: false,
+      imagenurl:'',
+      imagen:''
 
     }
   },

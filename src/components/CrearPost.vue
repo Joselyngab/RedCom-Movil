@@ -20,9 +20,9 @@
                         </v-ons-button>
                     </v-ons-col>
                     <v-ons-col>
-                        <v-ons-input type="image"  modifier="quiet" @change="mostar()"  v-model="post.imagen">
+                        <v-ons-button  modifier="quiet" @change="mostar()"  v-model="post.imagen">
                             <div style="color:#5d6367"><v-ons-icon style="color: rgb(172, 7, 187); margin-right: 5px; margin-top:10px " icon="md-collection-image" size="20px"></v-ons-icon> Fototeca</div>
-                        </v-ons-input>
+                        </v-ons-button>
                     </v-ons-col>
                      </v-ons-row>
                  <v-ons-card v-if="value">
@@ -34,7 +34,7 @@
                 <div class="row l">
 
                 <div class="input-field col s12 m6 l4">
-                    <input id="situacion" type="text" class="validate">
+                    <input id="situacion" type="text" class="validate" v-model="post.titulo" required>
          			 <label for="situacion">Cuéntanos qué está sucediendo</label>
                  </div>
 
@@ -141,7 +141,7 @@ export default {
      submit(){
        var post={
          categoria:this.post.categoria,
-         img:this.post.imagen,
+         img:'falla.jpg',
          tags:[],
          contenido:this.post.contenido,
          activa:true,
@@ -161,7 +161,7 @@ export default {
      },
 
         getCiudad: function(){
-          this.url="http://127.0.0.1:8000/api/estados/"+this.selectedItem+"/?format=json";
+          this.url="http://127.0.0.1:8000/api/estados/"+this.post.estado+"/?format=json";
            axios.get(this.url).then(response =>{
          this.ciudad = response.data
                 });

@@ -175,12 +175,11 @@
           email:this.user.email,
           notificaciones: []
        }
-       window.alert(this.valido)
-       if(!this.valido){
-         this.mostrar=true
 
-       }else{
+       if(this.user.email !== " "){
           auth.signup(crede,'/reg1',user)
+       }else{
+         this.mostrar=true
        }
 
      },

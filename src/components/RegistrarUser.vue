@@ -168,10 +168,10 @@ export default {
           email:this.user.email,
           notificaciones: []
        }
-       if(!this.valido){
-         this.mostrar=true
+       if(this.user.email !==""){
+         auth.signup(crede,'/reg1',user)
        }else{
-          auth.signup(crede,'/reg1',user)
+           this.mostrar=true
        }
 
      },

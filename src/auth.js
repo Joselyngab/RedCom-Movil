@@ -141,10 +141,27 @@ export default {
     createPost(datos, route) {
         axios.post(POST_URL, datos).then(response => {
             this.alma = true;
+            router.push(route);
             window.alert(this.alma)
         }).catch(error => {
             console.log(error)
         });
+
+    },
+    updatePerfil(datos, ruote) {
+        axios.put('http://localhost:8000/api/user/' + datos.id, {
+            name: datos.name,
+            userperfil: [
+                info = datos.userperfil.info,
+                estado = datos.userperfil.estado,
+            ],
+            direccion: datos.direccion
+        }).then(respose => {
+            this.update = true;
+            window.alert(this.update);
+        }).catch(error => {
+            console.log(error)
+        })
     }
 
 }
