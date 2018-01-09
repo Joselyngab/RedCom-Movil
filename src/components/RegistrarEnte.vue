@@ -5,28 +5,20 @@
                 <router-link to="/"><v-ons-back-button style="color: white"></v-ons-back-button></router-link>
             </div>
             <div class="center" >
-
                <router-link to="/">
                     <img src='../assets/img/rc1.png' style="width: 40px; height:40px; margin-left:100px; margin-top:8px;">
                 </router-link>
             </div>
-
-
-        </v-ons-toolbar>
-<div class="container">
-
+     </v-ons-toolbar>
+      <div class="container">
 			<div align="center">
 				<h3 style="color: rgb(10, 160, 152);">Registro de Entes</h3>
 			</div>
-
-	<div class="row">
-   		
-   		<form class="col s12"  :action="url1">
-               <p v-if="mostrar">{{msg}}</p> 
+	      <div class="row">
       		<div class="row">
-				<div class="input-field col s12 m6">
+			  	<div class="input-field col s12 m6">
          			 <i class="material-icons prefix">email</i>
-         	 		<input id="email" type="email" v-model="textSearch" class="validate" required>
+         	 		<input id="email" type="email" v-model="user.email" class="validate" required>
          			 <label for="email">Correo electrónico</label>
                      <div class="al"> <h4 v-if="usersFilter && usersFilter.length" v-show="show">Este usuario ya se encuentra registrado</h4>
                       <h5  v-else>Usuario disponible</h5></div>
@@ -101,6 +93,7 @@
     import Vue from 'vue';
     import VeeValidate from 'vee-validate';
     import axios from 'axios'
+    import auth from './auth'
     Vue.use(VeeValidate);
     export default {
         name: 'regente',
@@ -114,7 +107,7 @@
 //función que se ejecuta al escribir en el input email
    computed:{
      usersFilter: function(){
-         
+
        console.log('sii1');
          var inpEm=$("#email").val();
        if(inpEm == "")
@@ -135,7 +128,17 @@
      },
    },
 		data : function() {
-        return { 
+        return {
+           user:{
+        _cls: '',
+        email: '',
+        name: '',
+        password: '',
+        estado: '',
+        ciu: '',
+        direccion: '',
+        area:'',
+        },
         selectedItem: '',
          selectedItem1: '',
           selectedItem2: '',
@@ -143,7 +146,6 @@
         categ:[],
         ciudad: [],                    //arreglo que almacena las ciudades del estado seleccionado
         estados:[],                   //arreglo que almacena los estados
-        textSearch: "",               //utilizado para buscar que el usuario no esté registrado
         users: [],                    //utilizado para la búsqueda del correo electrónico
         show: false,
         volver1: false,
@@ -160,7 +162,7 @@
           this.url="http://127.0.0.1:8000/api/estados/"+this.selectedItem+"/?format=json";
            axios.get(this.url).then(response =>{
          this.ciudad = response.data
-                }); 
+                });
        },
        getEstado: function(){
        axios.get('http://127.0.0.1:8000/api/estados/?format=json').then(response =>{
@@ -175,18 +177,16 @@
      },
       //método utilizado para llenar el arreglo de users
      getUser: function(){
-          axios.get('http://127.0.0.1:8000/api/user/?format=json')
-        .then(response => {
-        this.users = response.data
-    });
-  
+
+        this.users = auth.getUsers()
+
      },
           //método para definir la url
      getUrl: function(a){
          if(a && a.length){
              this.volver = true;
              this.url1="#/registrarente/?volver=true";
-       
+
              return "#/registrarente/?volver=true";
 
          }
@@ -199,7 +199,7 @@
       getParameterByName: function(volver, url2) {
 
       if (!url2) url2 = window.location.href;
-       
+
         volver = volver.replace(/[\[\]]./g, "\\$&");
         var regex = new RegExp("[?&.]" + volver + "(=([^&#]*)|&|#|$)"),
             results = regex.exec(url2);
@@ -305,13 +305,13 @@ h4{
     font-size: 12px;
     color: red;
     line-height: 0px;
-    
+
 }
 h5{
     font-size: 12px;
     color: #26a69a;
     line-height: 0px;
-    
+
 }
 .al{
     margin-left: 45px;

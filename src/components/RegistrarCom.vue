@@ -10,77 +10,86 @@
                     <img src='../assets/img/rc1.png' style="width: 40px; height:40px; margin-left:100px; margin-top:8px;">
                 </router-link>
             </div>
-
-
         </v-ons-toolbar>
 
         <div class="container">
 
 			<div align="center">
 				<h3  style="color: rgb(10, 160, 152);">Registro de Comunidades</h3>
-			</div>
+      </div>
+
 	<div class="row">
-   		<form class="col s12"  :action="url1">
-               <p v-if="mostrar">{{msg}}</p>
+
+   		<div class="col s12" >
       		<div class="row">
-				<div class="input-field col s12 m6">
+            <div class="form-group">
+				    <div class="input-field col s12 m6">
          			 <i class="material-icons prefix">email</i>
          	 		<input id="email" type="email" v-model="userCom.email" class="validate" required>
-         			 <label for="email">Correo electrónico</label>
-                     <div class="al"> <h4 v-if="usersFilter && usersFilter.length" v-show="show">Este usuario ya se encuentra registrado</h4>
+                <label for="email">Correo electrónico</label>
+              </div>
+                     <div class="al"> <h4 v-if="usersFilter && usersFilter.length">Este usuario ya se encuentra registrado</h4>
                       <h5  v-else>Usuario disponible</h5></div>
-        		</div>
+          </div>
+            </div>
+             <div class="form-group">
         		<div class="input-field col s12 m6">
          			 <i class="material-icons prefix">supervisor_account</i>
-          			<input id="nombre"  type="text" class="validate" required>
+          			<input id="nombre"  type="text" class="validate" required v-model="userCom.name">
           			<label for="nombre">Nombre</label>
-       			</div>
-		 		<div class="input-field col s12 m6">
-          			<i class="material-icons prefix">lock</i>
-          			<input id="password" type="password" class="validate" required v-model="userCom.password">
-          			<label for="password">Contraseña</label>
-        		</div>
-			</div>
-				<div class= "tit">
-					<i class="material-icons prefix" style="color: rgb(10, 160, 152);">place</i>
-					<h5 style="color: rgb(10, 160, 152);">Ubicación</h5>
+             </div>
+             </div>
+             <div class="form-group">
+		 	      	<div class="input-field col s12 m6">
+          		    	<i class="material-icons prefix">lock</i>
+          			    <input id="password" type="password" class="validate" required v-model="userCom.password">
+          		    	<label for="password">Contraseña</label>
+            </div>
+            </div>
+			      </div>
+			    	<div class= "tit">
+				  	<i class="material-icons prefix" style="color: rgb(10, 160, 152);">place</i>
+					  <h5 style="color: rgb(10, 160, 152);">Ubicación</h5>
                 </div>
                 <v-ons-row>
                     <v-ons-col name="a" id="a">
-			              <label>Estado</label>
-                    <v-ons-select name="edo" id="edo"  v-on:change="getCiudad()" material class="material" style="width: 80%" v-model="userCom.estado" required>
-                        <option class="tam" name="edos" id="edos" v-for="item1 in estados" :value="item1.id" :key="item1.key">
+                    <label>Estado</label>
+                    <div class="form-group">
+                    <v-ons-select name="edo" id="edo"  v-on:change="getCiudad()" material class="material" style="width: 80%"  v-model="userCom.estado" required>
+                        <option class="tam"  v-for="item1 in estados" :value="item1.id" :key="item1.key">
                             {{ item1.estado }}
                         </option>
                     </v-ons-select>
+                    </div>
                     </v-ons-col>
                 </v-ons-row>
                   <v-ons-col name="b" id="b">
 
                      <label>Ciudad</label>
-
-                    <v-ons-select name="ciudad" id="ciudad" material class="material" style="width: 80%"  required >
-                        <option class="tam1" v-for="item2 in ciudad.ciudades" :value="item2.id" :key="item2.key">
+                     <div class="form-group">
+                    <v-ons-select  material class="material" style="width: 80%"  v-model="userCom.ciu"  required >
+                        <option class="tam1" v-for="item2 in ciudad.ciudades" :value="item2" :key="item2.key">
                             {{item2}}
                         </option>
                     </v-ons-select>
-
+                    </div>
                     </v-ons-col>
                 <div class="col s12 m12 l6">
-               <div class="input-field">
-                     <v-text-area name="contenido" id="contenido" length="50" v-model="userCom" required></v-text-area>
+                  <div class="form-group">
+               <div class="input-field" >
+                     <v-text-area name="contenido" id="contenido" length="50" v-model="userCom.direccion" required></v-text-area>
                      <label for="text"><i class="material-icons">pin_drop</i>Dirección</label>
                 </div>
-<<<<<<< HEAD
-
-=======
->>>>>>> 36c5b300fa7f53c5cfc5098afaa6f3b013e81348
+                </div>
                  </div>
-            <div class="center"> <button class="button--light btn1" modifier="large" type="submit" @click="submit()" >REGISTRAR</button> </div>
-   		 </form>
+                  <v-ons-dialog cancelable :visible.sync="mostrar">
+                    <p style="text-align: center">Error al ingresar los datos</p>
+                   </v-ons-dialog>
+            <div class="center">
+              <v-ons-button class="button button--light material" modifier="large"  v-on:click="submit()" >REGISTRAR</v-ons-button>
+               </div>
+	          </div>
  	  </div>
-	</div>
-
  </v-ons-page>
 </template>
 <script>
@@ -95,25 +104,18 @@ import auth from '../auth'
 
      this.getEstado();
      this.getUser();
-     var volver = this.getParameterByName('volver');
+
 
   },
   //función que se ejecuta al escribir en el input email
    computed:{
      usersFilter: function(){
-         var inpEm=$("#email").val();
-       if(inpEm == "")
-       {
-           this.show = false
-       }
-       else{
-           this.show = true
-       }
+
        var textSearch = this.userCom.email;
        var a = this.users.filter(function(el) {
          return el.email.toLowerCase().indexOf(textSearch.toLowerCase()) !== -1;
        });
-       this.getUrl(a);
+       this.show=a;
        return a;
 
      },
@@ -129,9 +131,6 @@ import auth from '../auth'
         estado: '',
         ciu: '',
         direccion: '',
-        telefono_contacto: 0,
-        a_intereses: Array,
-        a_intereses: [],
       },
       selectedItem: '',
       selectedItem1: '',
@@ -140,7 +139,7 @@ import auth from '../auth'
       estados:[],                   //arreglo que almacena los estados
       textSearch: "",               //utilizado para buscar que el usuario no esté registrado
       users: [],                    //utilizado para la búsqueda del correo electrónico
-      show: false,
+      show: 0,
       volver1: false,
       mostrar: false,
       url1:'',
@@ -154,25 +153,38 @@ import auth from '../auth'
    methods:{
      // Metodo para almacenar usuario y sus credenciales
      submit(){
+       window.alert(this.userCom.email + this.userCom.password + this.userCom.estado +'  '+ this.userCom.ciu+ this.userCom.direccion)
        var crede = {
-         username:this.email,
-         password1:this.password,
-         password2:this.password,
-         email:this.email,
+         username:this.userCom.email,
+         password1:this.userCom.password,
+         password2:this.userCom.password,
+         email:this.userCom.email,
        }
        var user = {
-
-          email:this.userCom.email,
+          direccion:this.userCom.direccion,
           name: this.userCom.name,
+          modificado: null,
+          seguidos: [],
+          activo: true,
+          slug:this.userCom.name,
+          ciudad:this.userCom.ciu,
+          _cls: "User.Comunidad",
+          seguidores: [],
+          userperfil: {
+            avatar: "avatar-com.png",
+            info: "Nuevo en REDCOM",
+            estado: " Con expectativas"
+            },
           password: this.userCom.password,
           estado: this.userCom.estado,
-          ciudad:this.userCom.ciu,
-          direccion:this.userCom.direccion,
-          cls: 'User.Comunidad',
+          email:this.userCom.email,
+          notificaciones: []
        }
-
-          auth.signup(crede,'/reg1',user)
-
+       if(!usersFilter && !usersFilter.length){
+         auth.signup(crede,'/reg1',user)
+       }else{
+         this.mostrar=true
+       }
 
      },
        //método para buscar llenar el array ciudad con los datos del estado seleccionado
@@ -197,40 +209,10 @@ import auth from '../auth'
         this.users = response.data
     });
      },
-     //método para definir la url
-     getUrl: function(a){
-         if(a && a.length){
-             this.volver = true;
-             this.url1="#/registrarcom/?volver=true";
 
-         }
-         else{
-             this.url1="#/reg1";
-         }
-     },
-     //obtener el valor de volver al momento de renderizar
-      getParameterByName: function(volver, url2) {
-
-      if (!url2) url2 = window.location.href;
-       console.log('casi');
-        volver = volver.replace(/[\[\]]./g, "\\$&");
-        var regex = new RegExp("[?&.]" + volver + "(=([^&#]*)|&|#|$)"),
-            results = regex.exec(url2);console.log('listo1');
-        if (!results) return null;
-        if (!results[2]) return '';
-        this.volver1 = decodeURIComponent(results[2].replace(/\+/g, ""));
-        if(a && a.length)
-        {
-            this.mostrar = true;
-        }
-        else{
-            this.mostrar = false;
-        }
-
-    },
 
    }
-    }
+}
 
 </script>
 

@@ -105,7 +105,6 @@
         </div>      
     </v-ons-page>
 
-
 </template>
 
 <script>
@@ -174,8 +173,8 @@ export default {
    function onFail(message) { 
       alert('Failed because: ' + message); 
    } 
-}},
-  
+}},  
+
    }
 }
 </script>
