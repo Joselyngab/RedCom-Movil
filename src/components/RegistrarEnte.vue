@@ -93,7 +93,7 @@
     import Vue from 'vue';
     import VeeValidate from 'vee-validate';
     import axios from 'axios'
-    import auth from './auth'
+    import auth from '../auth'
     Vue.use(VeeValidate);
     export default {
         name: 'regente',
