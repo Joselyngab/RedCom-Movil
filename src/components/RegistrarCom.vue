@@ -71,10 +71,6 @@
                      <v-text-area name="contenido" id="contenido" length="50" v-model="userCom" required></v-text-area>
                      <label for="text"><i class="material-icons">pin_drop</i>Dirección</label>
                 </div>
-<<<<<<< HEAD
-
-=======
->>>>>>> 36c5b300fa7f53c5cfc5098afaa6f3b013e81348
                  </div>
             <div class="center"> <button class="button--light btn1" modifier="large" type="submit" @click="submit()" >REGISTRAR</button> </div>
    		 </form>
@@ -129,9 +125,6 @@ import auth from '../auth'
         estado: '',
         ciu: '',
         direccion: '',
-        telefono_contacto: 0,
-        a_intereses: Array,
-        a_intereses: [],
       },
       selectedItem: '',
       selectedItem1: '',
