@@ -11,7 +11,7 @@
         <div class="center">
 				<h3  style="color: rgb(10, 160, 152);">Editar perfil</h3>
         </div>
-   		<form action="#">
+   		<form >
                 <v-ons-row>
                         <v-ons-col>
                              <v-ons-button id="im" modifier="quiet" @click="camara()" v-bind="ver" v-model="ver">
@@ -48,17 +48,17 @@
                         </div>
                           <div class="input-field col s12 m6">
                             <i class="material-icons prefix">sentiment_very_satisfied</i>
-                            <input id="descripcion" type="text" class="validate" :value="user.userperfil.estado" v-model="user.userperfil.estado">
+                            <input id="descripcion" type="text" class="validate" :value="user.userperfil.estado" v-model="actual">
                             <label for="descripcion" >Como estas Ahora</label>
                         </div>
                         <div class="input-field col s12 m6">
                             <i class="material-icons prefix">sentiment_very_satisfied</i>
-                            <input id="descripcion" type="text" class="validate" :value="user.userperfil.info">
+                            <input id="descripcion" type="text" class="validate" :value="user.userperfil.info" v-model="informacion">
                             <label for="descripcion" >Sobre mí</label>
                         </div>
                         <div class="input-field col s12 m6">
                             <i class="material-icons prefix"> location_on</i>
-                            <input id="direccion" type="text" class="validate" :value="user.direccion">
+                            <input id="direccion" type="text" class="validate" :value="user.direccion" v-model="user.direccion">
                             <label for="direccion" >Dirección</label>
                         </div>
 
@@ -88,41 +88,55 @@ import axios from 'axios'
 import auth from '../auth'
  export default {
       created(){
-      this.user();
+      this.Conectado();
    },
      name: 'editarperfil',
 
-     data:function(){
+     data(){
 
       return{
           ver:{type:Boolean, default:false},
           ver:false,
             idUser:'',
-            user: [],
+            user:{
+              id:'',
+              name:'',
+              email:'',
+              userperfil:{
+              avatar:'',
+              info:'',
+              estado: '',
+            },
+            direccion:''
+            },
              estados:[],                   //arreglo que almacena los estados
             show: false,
             visible:false,
+            informacion:'',
+            actual:'',
     }
   },
 
 
 
    methods: {
-     user(){
+     Conectado(){
        this.user = auth.getUser()
      },
      submit(){
           var perfil={
             id:this.user.id,
             name: this.user.name,
-            userperfil:[
-              info = this.user.userperfil.info,
-              estado = this.user.userperfil.estado,
-            ],
+            email:this.user.email,
+            userperfil:{
+              avatar: this.user.userperfil.avatar,
+              info: this.informacion,
+              estado:this.actual
+            },
             direccion:this.user.direccion
 
           }
-          if(this.user.name!=="" && this.user.direccion!="" && this.user.userperfil.estado!=""){
+          if(this.user.name!=="" && this.user.direccion!="" && this.actual!=""){
             auth.updatePerfil(perfil, '/principal')
           }
           else{

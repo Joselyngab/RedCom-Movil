@@ -149,16 +149,18 @@ export default {
 
     },
     updatePerfil(datos, ruote) {
-        axios.put('http://localhost:8000/api/user/' + datos.id, {
+        axios.put('http://localhost:8000/api/user/' + datos.id + '/', {
             name: datos.name,
-            userperfil: [
-                info = datos.userperfil.info,
-                estado = datos.userperfil.estado,
-            ],
+            email: datos.email,
+            userperfil: {
+                avatar: datos.userperfil.avatar,
+                info: datos.userperfil.info,
+                estado: datos.userperfil.estado,
+            },
             direccion: datos.direccion
         }).then(respose => {
             this.update = true;
-            window.alert(this.update);
+            router.push(route);
         }).catch(error => {
             console.log(error)
         })
