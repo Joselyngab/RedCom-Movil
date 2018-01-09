@@ -73,6 +73,8 @@ export default {
   name: 'post',
    created: function() {
      this.getPublicac();
+     this.getUser();
+     this.postMuro();
   },
 
   components: {
@@ -91,9 +93,11 @@ export default {
           
           publicacion:[],
           user: [],
+           user1: [],
           categoria: [],
           autor:'',
           url: '',
+          muro: [],
       }
   },
   methods: {
@@ -110,6 +114,37 @@ export default {
        axios.get('http://127.0.0.1:8000/api/publicacion/?format=json').then(response =>{
          this.publicacion = response.data
        });
+  
+         
+       
+     },
+     getUser: function(){
+  
+          axios.get('http://127.0.0.1:8000/api/user/5a4bfc1601f12f216cfa54e0/?format=json').then(response =>{
+         this.user1 = response.data
+       });
+       console.log(this.user1.name)
+       return this.user1.name
+     },
+     postMuro:function(){
+       console.log(this.user1.name)
+       if(this.user1.seguidos.length == 0)
+         {
+           for (i=0; i<this.publicacion.length; i++){
+            if(this.publicacion[i].autor == '5a4bfc1601f12f216cfa54e0')
+                this.muro.push(this.publicacion[i])
+            }
+         }
+         else{
+           for (i=0; i<this.publicacion.length; i++){
+             for (j=0; j<this.user1.seguidos.length; j++){
+                if((this.publicacion[i].autor == this.user1.seguidos[j]) || (this.publicacion[i].autor == '5a4bfc1601f12f216cfa54e0'))
+                    this.muro.push(this.publicacion[i])
+                }
+             }
+            
+         }
+         console.log(this.muro)
      },
      buscarUser: function (idU){
        axios.get('http://127.0.0.1:8000/api/user/'+idU+'/?format=json').then(response =>{
