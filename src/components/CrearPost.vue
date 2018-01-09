@@ -5,14 +5,14 @@
                 <router-link to="/principal"><v-ons-back-button style="color: white"></v-ons-back-button></router-link>
             </div>
             <div class="center" >
-               <img src='../assets/img/rc1.png' style="width: 40px; height:40px; margin-left:0; margin-top:8px;"> 
+               <img src='../assets/img/rc1.png' style="width: 40px; height:40px; margin-left:0; margin-top:8px;">
             </div>
         </v-ons-toolbar>
         <div class="center">
              <h3  style="color: rgb(10, 160, 152);">Nueva Publicación</h3>
         </div>
         <div class="container">
-            <form id="registroPost" method="POST" action="/principal">
+            <form >
              <v-ons-row>
                     <v-ons-col>
                         <v-ons-button id="im" modifier="quiet"  @click="value=true" v-model="value" v-bind="value">
@@ -20,32 +20,31 @@
                         </v-ons-button>
                     </v-ons-col>
                     <v-ons-col>
-                        <v-ons-button id="im" modifier="quiet" @click="value=true" v-model="value" v-bind="value">
+                        <v-ons-input type="image"  modifier="quiet" @change="mostar()"  v-model="post.imagen">
                             <div style="color:#5d6367"><v-ons-icon style="color: rgb(172, 7, 187); margin-right: 5px; margin-top:10px " icon="md-collection-image" size="20px"></v-ons-icon> Fototeca</div>
-                        </v-ons-button>
+                        </v-ons-input>
                     </v-ons-col>
                      </v-ons-row>
                  <v-ons-card v-if="value">
                  <div class="center">
-                    <img id="myimg" style="width: 80%"></img>
-                
+                    <img id="myimg" :src = 'this.post.imagen' style="width: 80%">
                 </div>
                 </v-ons-card>
                 <br>
                 <div class="row l">
-         
+
                 <div class="input-field col s12 m6 l4">
                     <input id="situacion" type="text" class="validate">
-         			 <label for="email">Cuéntanos qué está sucediendo</label>
+         			 <label for="situacion">Cuéntanos qué está sucediendo</label>
                  </div>
-             
+
                  </div>
-      
+
                 <div class="row">
                 <div class="col s12 m12 l6">
                  <div class="input-field">
-                     <v-text-area name="contenido" id="contenido" length="50" v-model="contenido"></v-text-area>
-                         <label for="text">Describe la Situación</label>
+                     <v-text-area name="contenido" id="contenido" length="50" v-model="post.contenido"></v-text-area>
+                         <label for="contenido">Describe la Situación</label>
                  </div>
                 </div>
                  </div>
@@ -53,28 +52,28 @@
                      <v-ons-list-item>
                     <div class="center">
                     <label>¿Con qué área se relaciona esta situación?</label>
-                      <v-ons-select name="area" material class="material" style="width: 80%" v-model="selectedItem2" >
-                        <option class="tam3" v-for="item in categ" :value="item.value" :key="item.key">
+                      <v-ons-select name="area" material class="material" style="width: 80%" v-model="post.categoria" >
+                        <option class="tam3" v-for="item in categ" :value="item.id" :key="item.key">
                             {{ item.nombre }}
                         </option>
                     </v-ons-select>
                     </div>
-                
+
                     </v-ons-list-item>
                 </v-ons-list>
-         
+
 				<div class= "tit">
 					<i class="material-icons prefix" style="color: rgb(10, 160, 152);">place</i>
 					<h5 style="color: rgb(10, 160, 152);">¿Dónde ocurrió?</h5>
 				</div>
                 <label>Estado</label>
                  <div class="center">
-                <v-ons-select name="edo" id="edo"  v-on:change="getCiudad()" material class="material" style="width: 80%" v-model="selectedItem" required>
+                <v-ons-select name="edo" id="edo"  v-on:change="getCiudad()" material class="material" style="width: 80%" v-model="post.estado" required>
                         <option class="tam" name="edos" id="edos" v-for="item1 in estados" :value="item1.id" :key="item1.key">
                             {{ item1.estado }}
                         </option>
                     </v-ons-select>
-                
+
                      </div>
                     <label>Ciudad</label>
                     <div class="center">
@@ -93,16 +92,16 @@
 
                 <section style="margin: 20px"></section>
                 <div class="center">
-                <router-link to="/principal" ><v-ons-button  modifier="material large" class="button button--light" style="margin: 6px 0">Publicar</v-ons-button></router-link> 
+                <router-link to="/principal" ><v-ons-button  modifier="material large" class="button button--light" style="margin: 6px 0">Publicar</v-ons-button></router-link>
                 </div>
-    
+
                     <div id="deviceready" class="blink">
                          <p class="event listening"></p>
                             <p class="event received"></p>
                      </div>
-        
+
             </form>
-        </div>      
+        </div>
     </v-ons-page>
 
 </template>
@@ -114,14 +113,14 @@ export default {
   created: function() {
      this.getEstado();
      this.getCat();
-    
+
       },
    data : function() {
         return {
             value:{type:Boolean},
             value:false,
             titulo:{type:String},
-            titulo:'', 
+            titulo:'',
             imagen:{type:File},
             contenido:{type:String},
             categoria:{type:Boolean},
@@ -134,18 +133,18 @@ export default {
         estados:[],                   //arreglo que almacena los estados
 
        }
-       
-         document.getElementById("im").addEventListener 
+
+         document.getElementById("im").addEventListener
          ("click", cameraTakePicture);
-      
+
    },
    methods: {
-       
+
         getCiudad: function(){
           this.url="http://127.0.0.1:8000/api/estados/"+this.selectedItem+"/?format=json";
            axios.get(this.url).then(response =>{
          this.ciudad = response.data
-                }); 
+                });
        },
        getEstado: function(){
        axios.get('http://127.0.0.1:8000/api/estados/?format=json').then(response =>{
@@ -159,21 +158,21 @@ export default {
        });
      },
        camara(){
-       function cameraTakePicture() { 
-   navigator.camera.getPicture(onSuccess, onFail, {  
-      quality: 50, 
-      destinationType: Camera.DestinationType.DATA_URL 
-   });  
-   
-   function onSuccess(imageData) { 
-      var image = document.getElementById('myimg'); 
-      image.src = "data:image/jpeg;base64," + imageData; 
-   }  
-   
-   function onFail(message) { 
-      alert('Failed because: ' + message); 
-   } 
-}},  
+       function cameraTakePicture() {
+   navigator.camera.getPicture(onSuccess, onFail, {
+      quality: 50,
+      destinationType: Camera.DestinationType.DATA_URL
+   });
+
+   function onSuccess(imageData) {
+      var image = document.getElementById('myimg');
+      image.src = "data:image/jpeg;base64," + imageData;
+   }
+
+   function onFail(message) {
+      alert('Failed because: ' + message);
+   }
+}},
 
    }
 }
@@ -181,8 +180,8 @@ export default {
 
 <style scoped>
 .inp{
-  margin-top: 10px; 
-  width: 100%; 
+  margin-top: 10px;
+  width: 100%;
 }
 .tam{
     font-size: 10px;
@@ -237,14 +236,14 @@ h3{
 .button--light {
   background-color: transparent;
   color: #9E9898;
-  border: 1px solid rgba(0,0,0,0.2); 
+  border: 1px solid rgba(0,0,0,0.2);
 }
 .button--light:active {
   background-color: rgba(0,0,0,0.05);
   color: #9E9898;
   border: 1px solid rgba(0,0,0,0.2);
   opacity: 3;
- 
+
 }
 .l{
     margin-top: 30px;

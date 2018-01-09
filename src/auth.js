@@ -86,7 +86,7 @@ export default {
             })
         }
         //window.alert(this.alma);
-        // router.push(redirect);
+        router.push(redirect);
     },
 
     // Remueve el token al salir del sistema

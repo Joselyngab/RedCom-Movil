@@ -55,7 +55,7 @@
 			            <v-ons-row>
                     <v-ons-col>
 			              <label>Estado</label>
-                    <v-ons-select name="edo" id="edo"  v-on:change="getCiudad()" material class="material" style="width: 80%" v-model="user.estado" required>
+                    <v-ons-select dafault="Seleccione una Opcion" name="edo" id="edo"  v-on:change="getCiudad()" material class="material" style="width: 80%" v-model="user.estado" required>
                         <option class="tam" name="edos" id="edos" v-for="item1 in estados" :value="item1.id" :key="item1.key">
                             {{ item1.estado }}
                         </option>

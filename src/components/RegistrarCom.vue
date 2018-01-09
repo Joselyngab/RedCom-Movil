@@ -22,29 +22,29 @@
 
    		<div class="col s12" >
       		<div class="row">
-            <div class="form-group">
 				    <div class="input-field col s12 m6">
          			 <i class="material-icons prefix">email</i>
          	 		<input id="email" type="email" v-model="userCom.email" class="validate" required>
                 <label for="email">Correo electrónico</label>
               </div>
+               <div v-show="show">
                      <div class="al"> <h4 v-if="usersFilter && usersFilter.length">Este usuario ya se encuentra registrado</h4>
                       <h5  v-else>Usuario disponible</h5></div>
-          </div>
+                      </div>
+             </div>
             </div>
-             <div class="form-group">
+
         		<div class="input-field col s12 m6">
          			 <i class="material-icons prefix">supervisor_account</i>
           			<input id="nombre"  type="text" class="validate" required v-model="userCom.name">
           			<label for="nombre">Nombre</label>
              </div>
-             </div>
-             <div class="form-group">
+
 		 	      	<div class="input-field col s12 m6">
           		    	<i class="material-icons prefix">lock</i>
           			    <input id="password" type="password" class="validate" required v-model="userCom.password">
           		    	<label for="password">Contraseña</label>
-            </div>
+
             </div>
 			      </div>
 			    	<div class= "tit">
@@ -54,34 +54,29 @@
                 <v-ons-row>
                     <v-ons-col name="a" id="a">
                     <label>Estado</label>
-                    <div class="form-group">
                     <v-ons-select name="edo" id="edo"  v-on:change="getCiudad()" material class="material" style="width: 80%"  v-model="userCom.estado" required>
                         <option class="tam"  v-for="item1 in estados" :value="item1.id" :key="item1.key">
                             {{ item1.estado }}
                         </option>
                     </v-ons-select>
-                    </div>
                     </v-ons-col>
                 </v-ons-row>
                   <v-ons-col name="b" id="b">
 
                      <label>Ciudad</label>
-                     <div class="form-group">
                     <v-ons-select  material class="material" style="width: 80%"  v-model="userCom.ciu"  required >
                         <option class="tam1" v-for="item2 in ciudad.ciudades" :value="item2" :key="item2.key">
                             {{item2}}
                         </option>
                     </v-ons-select>
-                    </div>
                     </v-ons-col>
                 <div class="col s12 m12 l6">
-                  <div class="form-group">
+
                <div class="input-field" >
                      <v-text-area name="contenido" id="contenido" length="50" v-model="userCom.direccion" required></v-text-area>
                      <label for="text"><i class="material-icons">pin_drop</i>Dirección</label>
                 </div>
                 </div>
-                 </div>
                   <v-ons-dialog cancelable :visible.sync="mostrar">
                     <p style="text-align: center">Error al ingresar los datos</p>
                    </v-ons-dialog>
@@ -89,7 +84,6 @@
               <v-ons-button class="button button--light material" modifier="large"  v-on:click="submit()" >REGISTRAR</v-ons-button>
                </div>
 	          </div>
- 	  </div>
  </v-ons-page>
 </template>
 <script>
@@ -111,11 +105,16 @@ import auth from '../auth'
    computed:{
      usersFilter: function(){
 
+       if( this.user.email == "")
+       { this.show = false}
+       else{this.show = true}
        var textSearch = this.userCom.email;
        var a = this.users.filter(function(el) {
          return el.email.toLowerCase().indexOf(textSearch.toLowerCase()) !== -1;
        });
-       this.show=a;
+          if(a && a.length){
+         this.valido=true
+       }
        return a;
 
      },
@@ -132,18 +131,12 @@ import auth from '../auth'
         ciu: '',
         direccion: '',
       },
-      selectedItem: '',
-      selectedItem1: '',
-      url:'',
+
       ciudad: [],                    //arreglo que almacena las ciudades del estado seleccionado
       estados:[],                   //arreglo que almacena los estados
-      textSearch: "",               //utilizado para buscar que el usuario no esté registrado
       users: [],                    //utilizado para la búsqueda del correo electrónico
-      show: 0,
-      volver1: false,
+      valido: false,
       mostrar: false,
-      url1:'',
-      msg: 'El correo electrónico que ha proporcionado se encuentra siendo utilizado por otro usuario, por favor intene de nuevo',
 
        }
 

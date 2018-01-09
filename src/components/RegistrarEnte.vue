@@ -19,9 +19,11 @@
 			  	<div class="input-field col s12 m6">
                 <i class="material-icons prefix">email</i>
          	 		<input id="email" type="email" v-model="user.email" class="validate" required>
-         			 <label for="email">Correo electrónico</label>
+                      <label for="email">Correo electrónico</label>
+                       <div v-show="show">
                      <div class="al"> <h4 v-if="usersFilter && usersFilter.length">Este usuario ya se encuentra registrado</h4>
                       <h5  v-else>Usuario disponible</h5></div>
+                      </div>
         		</div>
 
         		<div class="input-field col s12 m6">
