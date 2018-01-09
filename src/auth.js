@@ -133,7 +133,7 @@ export default {
         window.alert(this.alma);
         router.push(redirect);
     },
-
+    
     // Remueve el token al salir del sistema
     logout() {
         localStorage.removeItem('id_token')

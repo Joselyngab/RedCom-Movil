@@ -175,7 +175,10 @@ export default {
       alert('Failed because: ' + message); 
    } 
 }},
-  
+   guardarPost: function(){
+       axios.post('http://localhost:8000/api/Publicacion/?format=json')
+   }
+
    }
 }
 </script>
