@@ -1,33 +1,45 @@
 <template>
 <div class="container" id="app">
      <v-ons-list>
-      <v-ons-list-item v-for="item in publicacion" :key="item.link">
+      <v-ons-list-item v-for="publ in publicacion" :key="publ.link">
         <v-ons-card >
             <div class="pub">
                <div class="img">
                    <img src="../assets/perfil.jpg" style="width: 150% !important;" class="perfil">
                </div>
                 <div class="col">
-                 <!-- <div class="f1">
-                      <h4>{{p.authenticated}}</h4>
-                  </div>-->
+                 <div class="f1">
+                     <!--  <h4>{{p.authenticated}}</h4>-->
+                     <h4>{{buscarUser(publ.autor)}}</h4>
+             
+                  </div>
                   <div class="f2">
+                      
                       <h6>Hace 2 minutos</h6>
                   </div>
                 </div>
             </div>
-
-              <img src="" style="width: 100%">
-            <router-link to="/detallepost"><div class="card__imagen posti">
-
-                <img  style="width: 100%">
-            </div></router-link>
+            <div v-on:click="getDetalle(publ.id)">
+                <router-link :to="url">
+                   <h6>Ver detalle de la publicación</h6> 
+                </router-link>
+            </div>
+                    <div class="card__imagen posti" >
+                    
+                        <img :src="publ.img" style="width: 100%">
+                
+              
+                    </div>
+                    <div class="card_content"  >
+                      <p style="color: black;">{{publ.contenido}}</p>   
+                    </div>
+               
             <div class="card_content">
             </div>
             <v-ons-row>
                 <v-ons-col>
                     <v-ons-button modifier="quiet material" style="color: #5d6367">
-                         <v-ons-icon icon="md-thumb-up" size="20px"></v-ons-icon>
+                         {{publ.likes}}                      <v-ons-icon icon="md-thumb-up" size="20px"></v-ons-icon>
                     </v-ons-button>
                 </v-ons-col>
                 <v-ons-col>
@@ -71,21 +83,17 @@ export default {
 
   data: function() {
     return {
-      datos:[
-          {
-          img:{
+      
+        img:{
             type: File,
           },
-          img:img2,
-          contenido: 'Bote de aguas blancas'
-          },
-          {
-          label: 'Community Chat',
-          img: img2,
-          contenido: '...'
-          },
-        ],
+          img:'',
+          
           publicacion:[],
+          user: [],
+          categoria: [],
+          autor:'',
+          url: '',
       }
   },
   methods: {
@@ -102,9 +110,38 @@ export default {
        axios.get('http://127.0.0.1:8000/api/publicacion/?format=json').then(response =>{
          this.publicacion = response.data
        });
-       console.log('ok')
      },
+     buscarUser: function (idU){
+       axios.get('http://127.0.0.1:8000/api/user/'+idU+'/?format=json').then(response =>{
+         this.user = response.data
+       });
+       return this.user.name
+       
+     },
+       getDetalle: function(id){
+  
+        
+        this.url = '/detallepost/?id='+id;
+        console.log(this.url)
+    },
+      buscarImg: function(idP)
+     {
+       axios.get('http://127.0.0.1:8000/api/publicacion/'+idP+'/?format=json').then(response =>{
+         this.publi = response.data
+       });
+       console.log('ok1')
+       this.img='../assets/img/'+this.publi.img
+       return this.img
+     },
+     buscarCat: function (idC){
+       axios.get('http://127.0.0.1:8000/api/categoriapost/'+idC+'/?format=json').then(response =>{
+         this.categoria = response.data
+       });
+       console.log('ok2')
+      },
+   
   },
+
 
 
 

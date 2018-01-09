@@ -24,18 +24,24 @@
             </div>
         </div>
     </div>
+    
+    <div class="card_content">
+        <h4 style="color: black"</h4> 
+        <h4>{{buscarCat(publicacion.categoria)}}</h4>
+        <h5 style="color: blue">En Edo. {{buscarEstado(publicacion.estado)}}</h5>
+        
+    
+    </div>
     <div class="card__imagen posti">
         <img src="../assets/img/falla.jpg" style="width: 100%">    
     </div>
     <div class="center">
-    <div class="card_content">
-        <h3 style="font-weight: bold;">{{titulo}}</h3>
-    </div>
-    <div class="card_content">
-        <h5 style="color: blue">Barquisimeto - Edo. Lara</h5>
-        <h5 style="color: blue">Hidrolara</h5>
-        <h5>{{contenido}}</h5>
-    </div>
+
+        <div class="card_content">
+            <h3 style="font-weight: bold;">{{publicacion.titulo}}</h3>
+               
+        </div><div class="algo">
+         <h4>{{publicacion.contenido}}</h4></div>
     </div>
        
          <div class="center">
@@ -50,32 +56,67 @@
 
 <script>
 import img2 from '../assets/amigos.jpg'
+import axios from 'axios'
 export default {
      name: 'detallepost',
     created: function() {
-         this.getPub();
+         var id = this.getParameterByName('id');
+         this.getPublicac();
       },
      data () {
          return {
-     
-                    titulo: 'Bote de agua Av. Caracas',
-                    contenido: ' En la Av. Caracas con calles 3 y 4, frente a la urb. Ulala hay un bote de aguas blancas que lleva ya más de una semana',
-                    publicacion:[],
-                }
+               publicacion:[],
+               idPub: '',
+               categoria:[],
+               estado:[],
+               ciudad:[],
 
-            } ,
+        }
+
+    } ,
              methods: {
-     getPub: function(){
-       axios.get('http://127.0.0.1:8000/api/publicacion/?format=json').then(response =>{
-         this.publicacion= response.data
-       });
-
-     },
+    
      getUrl: function(algo){
        var dir = algo;
        var url = "../assets/img/" + dir;
        return url;
-     }
+     },
+      getParameterByName: function(id, url) {
+      if (!url) url = window.location.href;
+        id = id.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + id + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        this.idPub = decodeURIComponent(results[2].replace(/\+/g, " "));
+     
+        return this.idPub
+    },
+     getPublicac: function(){
+         
+       axios.get('http://127.0.0.1:8000/api/publicacion/'+this.idPub+'/?format=json').then(response =>{
+         this.publicacion = response.data
+       });
+     },
+      buscarEstado: function (idE){
+       axios.get('http://127.0.0.1:8000/api/estados/'+idE+'/?format=json').then(response =>{
+         this.estado = response.data
+       });
+       console.log(this.estado.estado)
+       return this.estado.estado
+      },
+       buscarCat: function (idC){
+       axios.get('http://127.0.0.1:8000/api/categoriapost/'+idC+'/?format=json').then(response =>{
+         this.categoria = response.data
+       });
+       console.log(this.categoria.nombre)
+       return this.categoria.nombre
+      },
+      buscarCiudad: function(i){
+          var a = this.estado.ciudades[i]
+          console.log(a)
+          return a
+      }
   },
 }      
      
@@ -92,7 +133,19 @@ export default {
   opacity: 3;
  
 }
-
+h3{
+    line-height: 15px;
+}
+h5{
+    font-size: 10px;
+}
+.algo{
+    margin-top: 30px;
+}
+h4{
+    font-size: 13px;
+    line-height: 15px;
+}
 .card-image{
     max-width: 10000px;
     margin: 0px, 0px ,0px,0px 
