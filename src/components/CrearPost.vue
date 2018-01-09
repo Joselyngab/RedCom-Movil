@@ -105,7 +105,6 @@
         </div>      
     </v-ons-page>
 
-
 </template>
 
 <script>
@@ -174,10 +173,7 @@ export default {
    function onFail(message) { 
       alert('Failed because: ' + message); 
    } 
-}},
-   guardarPost: function(){
-       axios.post('http://localhost:8000/api/Publicacion/?format=json')
-   }
+}},  
 
    }
 }
