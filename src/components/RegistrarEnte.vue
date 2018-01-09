@@ -17,26 +17,26 @@
 	      <div class="row">
       		<div class="row">
 			  	<div class="input-field col s12 m6">
-         			 <i class="material-icons prefix">email</i>
+                <i class="material-icons prefix">email</i>
          	 		<input id="email" type="email" v-model="user.email" class="validate" required>
          			 <label for="email">Correo electrónico</label>
-                     <div class="al"> <h4 v-if="usersFilter && usersFilter.length" v-show="show">Este usuario ya se encuentra registrado</h4>
+                     <div class="al"> <h4 v-if="usersFilter && usersFilter.length">Este usuario ya se encuentra registrado</h4>
                       <h5  v-else>Usuario disponible</h5></div>
         		</div>
 
         		<div class="input-field col s12 m6">
          			 <i class="material-icons prefix">business</i>
-          			<input name="nombre"  type="text" class="validate"  required>
+          			<input name="nombre" id="nombre" type="text" class="validate"  required  v-model="user.name">
           			<label  for="nombre">Nombre</label>
        			</div>
        			<div class="input-field col s12 m6">
           			<i class="material-icons prefix">phone</i>
-         	 		<input name="tlf" type="number" class="validate"  required>
+         	 		<input id="tlf" type="number" class="validate" required v-model="user.tlf" >
           			<label for="tlf">Número telefónico</label>
         		</div>
 		 		<div class="input-field col s12 m6">
           			<i class="material-icons prefix">lock</i>
-          			<input name="password" type="password" class="validate"  required>
+          			<input id="password" type="password" class="validate"  required v-model="user.password">
           			<label for="password">Contraseña</label>
         		</div>
 			</div>
@@ -48,7 +48,7 @@
                      <v-ons-row>
                     <v-ons-col name="a" id="a">
 			        <label>Estado</label>
-                    <v-ons-select name="edo" id="edo"  v-on:change="getCiudad()" material class="material" style="width: 80%" v-model="selectedItem" required>
+                    <v-ons-select name="edo" id="edo"  v-on:change="getCiudad()" material class="material" style="width: 80%" v-model="user.estado" required>
                         <option class="tam" name="edos" id="edos" v-for="item1 in estados" :value="item1.id" :key="item1.key">
                             {{ item1.estado }}
                         </option>
@@ -59,34 +59,35 @@
 
                      <label>Ciudad</label>
 
-                    <v-ons-select name="ciudad" id="ciudad" material class="material" style="width: 80%" v-model="selectedItem1" required >
-                        <option class="tam1" v-for="item2 in ciudad.ciudades" :value="item2.id" :key="item2.key" >
-                            {{item2}}
+                    <v-ons-select name="ciudad" id="ciudad" material class="material" style="width: 80%" v-model="user.ciu" required >
+                        <option class="tam1" v-for="item2 in ciudad.ciudades" :value="item2" :key="item2.key" >
+                           {{item2}}
                         </option>
                     </v-ons-select>
-
                     </v-ons-col>
                 <div class="col s12 m12 l6">
                		<div class="input-field">
-
-						<v-text-area name="contenido" id="contenido" length="50" v-model="contenido"  required></v-text-area>
-						<label for="text"><i class="material-icons">pin_drop</i>Dirección</label>
+						      <v-text-area name="contenido" id="contenido" length="50" v-model="user.direccion"  required></v-text-area>
+					      	<label for="text"><i class="material-icons">pin_drop</i>Dirección</label>
                		 </div>
            		</div>
 				   <label>Área a la que se dedica</label>
 			        <div class="center">
-                    <v-ons-select name="area" material class="material" style="width: 80%" v-model="selectedItem2" >
-                        <option class="tam3" v-for="item in categ" :value="item.value" :key="item.key">
+                    <v-ons-select name="area" material class="material" style="width: 80%" v-model="user.area" >
+                        <option class="tam3" v-for="item in categ" :value="item.id" :key="item.key">
                             {{ item.nombre }}
                         </option>
                     </v-ons-select>
                      </div>
 			        <br>
-                  <div class="center"> <button class="button--light btn1" modifier="large" type="submit" >REGISTRAR</button> </div>
-
-   		 </form>
+                 <v-ons-dialog cancelable :visible.sync="mostrar">
+                  <p style="text-align: center">Error al ingresar los datos</p>
+                  </v-ons-dialog>
+                  <div class="center">
+                  <v-ons-button class="button button--light material" modifier="large"  v-on:click="submit()" >REGISTRAR</v-ons-button>
+                  </div>
+	          </div>
  	  </div>
-	</div>
  </v-ons-page>
 </template>
 <script>
@@ -98,31 +99,23 @@
     export default {
         name: 'regente',
         created: function() {
-     this.getEstado();
-     this.getCat();
-    this.getUser();
-       var volver = this.getParameterByName('volver');
+         this.getEstado();
+         this.getCat();
+         this.getUser();
 
   },
 //función que se ejecuta al escribir en el input email
    computed:{
      usersFilter: function(){
 
-       console.log('sii1');
-         var inpEm=$("#email").val();
-       if(inpEm == "")
-       {
-           this.show = false
-       }
-       else{
-           this.show = true
-       }
-       var textSearch = this.textSearch;
+       var textSearch = this.user.email;
        var a = this.users.filter(function(el) {
          return el.email.toLowerCase().indexOf(textSearch.toLowerCase()) !== -1;
        });
        console.log('sii');
-       this.getUrl(a);
+       if(a && a.length){
+         this.valido=true
+       }
        return a;
 
      },
@@ -138,28 +131,59 @@
         ciu: '',
         direccion: '',
         area:'',
+        tlf:0,
         },
-        selectedItem: '',
-         selectedItem1: '',
-          selectedItem2: '',
-        url: '',
+
         categ:[],
         ciudad: [],                    //arreglo que almacena las ciudades del estado seleccionado
         estados:[],                   //arreglo que almacena los estados
         users: [],                    //utilizado para la búsqueda del correo electrónico
-        show: false,
-        volver1: false,
         mostrar: false,
-        url1:'',
-        msg: 'El correo electrónico que ha proporcionado se encuentra siendo utilizado por otro usuario, por favor intene de nuevo',
-
-
+        valido:false,
        }
 
    },
    methods:{
+       submit(){
+    var crede = {
+         username:this.user.email,
+         password1:this.user.password,
+         password2:this.user.password,
+         email:this.user.email,
+       }
+       var user = {
+          direccion:this.user.direccion,
+          name: this.user.name,
+          modificado: null,
+          seguidos: [],
+          activo: true,
+          slug:this.user.name,
+          ciudad:this.user.ciu,
+          area:this.user.area,
+          telefono:this.user.tlf,
+          _cls: "User.Ente",
+          seguidores: [],
+          userperfil: {
+            avatar: "avatar-ente.png",
+            info: "Nuevo en REDCOM",
+            estado: " Con expectativas"
+            },
+          password: this.user.password,
+          estado: this.user.estado,
+          email:this.user.email,
+          notificaciones: []
+       }
+       window.alert(this.valido)
+       if(!this.valido){
+         this.mostrar=true
+
+       }else{
+          auth.signup(crede,'/reg1',user)
+       }
+
+     },
         getCiudad: function(){
-          this.url="http://127.0.0.1:8000/api/estados/"+this.selectedItem+"/?format=json";
+          this.url="http://127.0.0.1:8000/api/estados/"+this.user.estado+"/?format=json";
            axios.get(this.url).then(response =>{
          this.ciudad = response.data
                 });
@@ -176,47 +200,13 @@
        });
      },
       //método utilizado para llenar el arreglo de users
-     getUser: function(){
-
-        this.users = auth.getUsers()
-
-     },
-          //método para definir la url
-     getUrl: function(a){
-         if(a && a.length){
-             this.volver = true;
-             this.url1="#/registrarente/?volver=true";
-
-             return "#/registrarente/?volver=true";
-
-         }
-         else{
-             this.url1="#/reg1";
-             return "#/reg1";
-         }
-     },
-     //obtener el valor de volver al momento de renderizar
-      getParameterByName: function(volver, url2) {
-
-      if (!url2) url2 = window.location.href;
-
-        volver = volver.replace(/[\[\]]./g, "\\$&");
-        var regex = new RegExp("[?&.]" + volver + "(=([^&#]*)|&|#|$)"),
-            results = regex.exec(url2);
-        if (!results) return null;
-        if (!results[2]) return '';
-        this.volver1 = decodeURIComponent(results[2].replace(/\+/g, ""));
-        if(a && a.length)
-        {
-            this.mostrar = true;
-        }
-        else{
-            this.mostrar = false;
-        }
-
-    },
-   }
-    }
+           getUser: function(){
+               axios.get('http://127.0.0.1:8000/api/user/?format=json')
+                 .then(response => {
+                   this.users = response.data });
+                    },
+           }
+  }
 
 </script>
 <style scooped>

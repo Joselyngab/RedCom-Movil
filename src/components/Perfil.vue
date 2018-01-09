@@ -5,11 +5,11 @@
                 <router-link to="/principal"><v-ons-back-button style="color: white"></v-ons-back-button></router-link>
             </div>
             <div class="center"  v-if="mostrar()">
-               <img src='../assets/img/rc1.png' style="width: 40px; height:40px; margin-left:0; margin-top:8px;"> 
+               <img src='../assets/img/rc1.png' style="width: 40px; height:40px; margin-left:0; margin-top:8px;">
             </div>
         </v-ons-toolbar>
     <v-ons-card>
-      
+
         <img src="../assets/perfil.jpg" alt="Imagen perfil" >
           <div class="title">
             {{user.name}}
@@ -20,12 +20,12 @@
           <v-ons-list-header>Acerca de {{user.name}}</v-ons-list-header>
           <v-ons-list-item>{{user.userperfil.info}}</v-ons-list-item>
           <v-ons-list-item>Mi Estado actual es: {{user.userperfil.estado}}</v-ons-list-item>
-          
+
         </v-ons-list>
         <div v-if="show">
-           <router-link :to="url"><v-ons-button class="material" style="border-radius:50%; 
-                                                  position: absolute; 
-                                                  right: 16px; 
+           <router-link :to="url"><v-ons-button class="material" style="border-radius:50%;
+                                                  position: absolute;
+                                                  right: 16px;
                                                   top:8px;"
                                                  >
              <v-ons-icon icon="md-edit" ></v-ons-icon></v-ons-button></router-link>
@@ -44,7 +44,7 @@
             </p>
         </v-ons-modal>
         </div>
-                     
+
       </div>
     </v-ons-card>
           <div class="estado">
@@ -64,6 +64,7 @@ import Estado from './Estado.vue'
 import Seguidores from './Seguidores.vue'
 import Seguidos from './Seguidos.vue'
 import axios from 'axios'
+import auth from '../auth'
 export default {
   name: 'perfil',
    components:{
@@ -90,14 +91,14 @@ export default {
       user: [],
       url: '',
       show: false
-      
-      
+
+
     }
   },
   methods: {
     showModal() {
             this.modalVisible = true;
-        
+
         },
     showModal1(){
       this.modalVisible1= true;
@@ -110,26 +111,28 @@ export default {
         if (!results) return null;
         if (!results[2]) return '';
         this.idUser = decodeURIComponent(results[2].replace(/\+/g, " "));
-     
+
         console.log(this.idUser);
         return this.idUser
     },
       getUser: function (){
            if (this.idUser == "")
         {
-          this.idUser = "5a4bfc1601f12f216cfa54e0";
+          this.user = auth.getUser();
           this.show = true;
-        }
-        var url = 'http://127.0.0.1:8000/api/user/'+this.idUser+'/?format=json';
-     
+        }else{
+            var url = 'http://127.0.0.1:8000/api/user/'+this.idUser+'/?format=json';
+
               axios.get(url).then(response => {
                 this.user = response.data
               });
-     
+        }
+
+
       },
       mostrar: function(url){
          if (!url) url = window.location.href;
-     
+
          if(url == "http://localhost:3333/#/principal")
          {
            return false
@@ -151,7 +154,7 @@ export default {
         console.log(this.user);
       },
     },*/
-  
+
 
 }
 </script>
@@ -163,20 +166,20 @@ export default {
  color: rgba(0,0,0,0.4);
   border: 1px solid rgba(0,0,0,0.2);
   font-size: 12px;
- 
+
 }
 .button--light:active {
   background-color: rgba(0,0,0,0.05);
   color: rgba(0,0,0,0.4);
   border: 1px solid rgba(0,0,0,0.2);
   opacity: 3;
- 
+
 }
 img{
      border-radius: 50%;
      width: 150px;
      height: 150px;
-     
+
      }
 
 .toolbar--material{
@@ -184,6 +187,6 @@ img{
 }
 ons-card {
   text-align: center;
-  
+
 }
 </style>

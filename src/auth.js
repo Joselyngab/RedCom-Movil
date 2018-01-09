@@ -65,61 +65,30 @@ export default {
         }).catch(error => {
             console.log(error)
         });
-        //if (data.cls == 'User.Persona') {
-        /*   axios.post(GETUSER_URL, {
-                _cls: data.cls,
-                email: data.email,
-                name: data.name,
-                password: data.password,
-                estado: data.estado,
-                ciudad: data.ciudad,
-                direccion: data.direccion,
-                apellido: data.apellido,
-                genero: data.genero,
-                edad: data.edad,
-                activo: true,
-                userperfil: {
-                    avatar: 'avatar-persona.png',
-                    info: 'nuevo en la aplicacion',
-                }
-            }).then(response => {
+        if (data._cls == 'User.Persona') {
+            axios.post(GETUSER_URL, data).then(response => {
                 this.alma == true;
                 window.alert(this.alma);
             })
-        }*/
-        // if (data.cls == 'User.Comunidad') {
-        axios.post('http://localhost:8000/api/user/', data).then(response => {
-            this.alma = true;
-            window.alert(this.alma);
-        }).catch(error => {
-            window.alert(error)
-        });
-        /*
-        if (data.cls == 'User.Ente') {
-            axios.post(GETUSER_URL, {
-                _cls: data.cls,
-                email: data.email,
-                name: data.name,
-                password: data.password,
-                estado: data.estado,
-                ciudad: data.ciudad,
-                direccion: data.direccion,
-                telefono: 0,
-                areadedicada: data.area,
-                activo: true,
-                userperfil: {
-                    avatar: 'avatar-ente.png',
-                    info: 'nuevo en la aplicacion',
-                }
-            }).then(response => {
+        }
+        if (data._cls == 'User.Comunidad') {
+            axios.post('http://localhost:8000/api/user/', data).then(response => {
+                this.alma = true;
+                window.alert(this.alma);
+            }).catch(error => {
+                window.alert(error)
+            });
+        }
+        if (data._cls == 'User.Ente') {
+            axios.post(GETUSER_URL, data).then(response => {
                 this.alma == true;
                 window.alert(this.alma)
             })
-        }*/
+        }
         //window.alert(this.alma);
         // router.push(redirect);
     },
-    
+
     // Remueve el token al salir del sistema
     logout() {
         localStorage.removeItem('id_token')

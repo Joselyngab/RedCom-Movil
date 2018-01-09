@@ -7,194 +7,184 @@
             <div class="center" >
                <router-link to="/">
                     <img src='../assets/img/rc1.png' style="width: 40px; height:40px; margin-left:100px; margin-top:8px;">
-                </router-link> 
+                </router-link>
             </div>
-            
-            
         </v-ons-toolbar>
-		
-
 <div class="container">
 			<div align="center">
 				<h3 style="color: rgb(10, 160, 152);">Registro de Personas</h3>
 			</div>
 	<div class="row">
-   				<form class="col s12"  :action="url1">
-               <p v-if="mostrar">{{msg}}</p>
+    <div class="col s12">
       		<div class="row">
-				<div class="input-field col s12 m6">
+				  <div class="input-field col s12 m6">
          			 <i class="material-icons prefix">email</i>
-         	 		<input id="email" type="email" v-model="textSearch" class="validate" required>
-         			 <label for="email">Correo electrónico</label>
-                     <div class="al"> <h4 v-if="usersFilter && usersFilter.length" v-show="show">Este usuario ya se encuentra registrado</h4>
+         	 		<input id="email" type="email" v-model="user.email" class="validate" required>
+                <label for="email">Correo electrónico</label>
+                  <div v-show="show">
+                  <div class="al"> <h4 v-if="usersFilter && usersFilter.length">Este usuario ya se encuentra registrado</h4>
                       <h5  v-else>Usuario disponible</h5></div>
+                  </div>
+
         		</div>
         		<div class="input-field col s12 m6">
          			 <i class="material-icons prefix">account_circle</i>
-          			<input id="nombre"  type="text" class="validate" required>
+          			<input id="nombre"  type="text" class="validate" required v-model="user.name" >
           			<label for="nombre">Nombre</label>
        			</div>
        			<div class="input-field col s12 m6">
           			<i class="material-icons prefix">account_circle</i>
-         	 		<input id="apellido" type="text" class="validate" required>
+         	 		<input id="apellido" type="text" class="validate" required v-model="user.apellido">
           			<label for="apellido">Apellido</label>
         		</div>
 		 		<div class="input-field col s12 m6">
           			<i class="material-icons prefix">lock</i>
-          			<input id="password" type="password" class="validate" required>
+          			<input id="password" type="password" class="validate" required v-model="user.password">
           			<label for="password">Contraseña</label>
         		</div>
-			</div>
-			
+		    	</div>
                 <label>Sexo</label>
                 <div class="center">
-                    <v-ons-select name="sexo" material class="material" style="width: 150%" v-model="selectedItem2" required>
+                    <v-ons-select name="sexo" material class="material" style="width: 80%" v-model="user.sexo" required>
                         <option class="tam" v-for="item2 in sexo" :value="item2.value" :key="item2.key">
                             {{ item2.text }}
                         </option>
                     </v-ons-select>
                 </div>
                 <br>
-			   <v-ons-row>
+			            <v-ons-row>
                     <v-ons-col>
 			              <label>Estado</label>
-                    <v-ons-select name="edo" id="edo"  v-on:change="getCiudad()" material class="material" style="width: 80%" v-model="selectedItem" required>
+                    <v-ons-select name="edo" id="edo"  v-on:change="getCiudad()" material class="material" style="width: 80%" v-model="user.estado" required>
                         <option class="tam" name="edos" id="edos" v-for="item1 in estados" :value="item1.id" :key="item1.key">
                             {{ item1.estado }}
                         </option>
                     </v-ons-select>
                     </v-ons-col>
                 </v-ons-row>
-	  	<br>
+	  	          <br>
            <v-ons-col name="b" id="b">
-
                      <label>Ciudad</label>
-
-                    <v-ons-select name="ciudad" id="ciudad" material class="material" style="width: 80%"  required >
-                        <option class="tam1" v-for="item2 in ciudad.ciudades" :value="item2.id" :key="item2.key">
+                    <v-ons-select name="ciudad" id="ciudad" material class="material" style="width: 80%"  required v-model="user.ciu">
+                        <option class="tam1" v-for="item2 in ciudad.ciudades" :value="item2" :key="item2.key">
                             {{item2}}
                         </option>
                     </v-ons-select>
-
                     </v-ons-col>
                 <div class="col s12 m12 l6">
                <div class="input-field">
-                     <v-text-area name="contenido" id="contenido" length="50" v-model="userCom" required></v-text-area>
+                     <v-text-area name="contenido" id="contenido" length="50" v-model="user.direccion" required></v-text-area>
                      <label for="text"><i class="material-icons">pin_drop</i>Dirección</label>
                 </div>
                  </div>
           <br>
-		 <div class="center"> 
-			 <button class="button--light btn1" modifier="large" type="submit" onclick = "validar()">REGISTRAR</button> </div>
-			
-   		 </form>
-            
+		              <v-ons-dialog cancelable :visible.sync="mostrar">
+                  <p style="text-align: center">Error al ingresar los datos</p>
+                  </v-ons-dialog>
+                  <div class="center">
+                  <v-ons-button class="button button--light material" modifier="large"  v-on:click="submit()" >REGISTRAR</v-ons-button>
+                  </div>
+       </div>
  	  </div>
-	</div>				
+	</div>
  </v-ons-page>
 </template>
 <script>
 import {mapGetters} from 'vuex';
   import axios from 'axios';
+  import auth from '../auth'
 export default {
 	name: 'registro',
     created: function() {
      this.getEstado();
     this.getUser();
-        
-    
-         var volver = this.getParameterByName('volver');
     },
    //función que se ejecuta al escribir en el input email
    computed:{
      usersFilter: function(){
          var inpEm=$("#email").val();
-       if(inpEm == "")
-       {
-           this.show = false
-           
-       }
-       else{
-           this.show = true
-           
-       }
-       var textSearch = this.textSearch;
+       if( this.user.email == "")
+       { this.show = false}
+       else{this.show = true}
+       var textSearch = this.user.email;
        var a = this.users.filter(function(el) {
          return el.email.toLowerCase().indexOf(textSearch.toLowerCase()) !== -1;
        });
-       this.getUrl(a);
+       if(a && a.length){
+         this.valido=true
+       }
        return a;
      }
    },
 	data : function() {
         return {
-           
-            titulo:{type:String},
-            titulo:'', 
-            imagen:{type:File},
-            contenido:{type:String},
-            categoria:{type:Boolean},
+           user:{
+            email: '',
+            name: '',
+            apellido:'',
+            password: '',
+            estado: '',
+            ciu: '',
+            direccion: '',
+            sexo:0
+        },
       sexo: [
-        { text: 'Femenino', value: 'Femenino' },
-        { text: 'Masculino', value: 'Masculino' },
-      ],
-        textSearch: "",                //utilizado para buscar que el usuario no esté registrado
+        { text: 'Femenino', value: 0 },
+        { text: 'Masculino', value: 1 },
+        ],
         users: [],                    //utilizado para la búsqueda del correo electrónico
         show: false,
-        volver1: false,
         mostrar: false,
-        url1:'',
-        msg: 'El correo electrónico que ha proporcionado se encuentra siendo utilizado por otro usuario, por favor intene de nuevo',
-         ciudad: [],                    //arreglo que almacena las ciudades del estado seleccionado
-      estados:[],                   //arreglo que almacena los estados
-         selectedItem: '',
-      selectedItem1: '',
-        selectedItem2: '',
+        ciudad: [],                    //arreglo que almacena las ciudades del estado seleccionado
+        estados:[],
+        valido:true                   //arreglo que almacena los estados
 	}},
 	methods:{
+     submit(){
+    var crede = {
+         username:this.user.email,
+         password1:this.user.password,
+         password2:this.user.password,
+         email:this.user.email,
+       }
+       var user = {
+          direccion:this.user.direccion,
+          name: this.user.name,
+          modificado: null,
+          seguidos: [],
+          activo: true,
+          slug:this.user.name,
+          ciudad:this.user.ciu,
+          sexo:this.user.sexo,
+          _cls: "User.Persona",
+          seguidores: [],
+          userperfil: {
+            avatar: "avatar-persona.png",
+            info: "Nuevo en REDCOM",
+            estado: " Con expectativas"
+            },
+          password: this.user.password,
+          estado: this.user.estado,
+          email:this.user.email,
+          notificaciones: []
+       }
+       if(!this.valido){
+         this.mostrar=true
+       }else{
+          auth.signup(crede,'/reg1',user)
+       }
+
+     },
         //método utilizado para llenar el arreglo de users
      getUser: function(){
           axios.get('http://127.0.0.1:8000/api/user/?format=json')
         .then(response => {
         this.users = response.data
     });
-  
      },
-           //método para definir la url
-     getUrl: function(a){
-         if(a && a.length){
-             this.volver = true;
-             this.url1="#/registrarpersona/?volver=true";
-
-         }
-         else{
-             this.url1="#/reg1";
-         }
-     },
-          //obtener el valor de volver al momento de renderizar
-      getParameterByName: function(volver, url2) {
-
-      if (!url2) url2 = window.location.href;
-       console.log('casi');
-        volver = volver.replace(/[\[\]]./g, "\\$&");
-        var regex = new RegExp("[?&.]" + volver + "(=([^&#]*)|&|#|$)"),
-            results = regex.exec(url2);console.log('listo1');
-        if (!results) return null;
-        if (!results[2]) return '';
-        this.volver1 = decodeURIComponent(results[2].replace(/\+/g, ""));
-
-        if(a && a.length)
-        {
-            this.mostrar = true;
-        }
-        else{
-            this.mostrar = false;
-        }
-
-    },
      //método para buscar llenar el array ciudad con los datos del estado seleccionado
        getCiudad: function(){
-          this.url='http://127.0.0.1:8000/api/estados/'+this.selectedItem+'/?format=json';
+          this.url='http://127.0.0.1:8000/api/estados/'+this.user.estado+'/?format=json';
            axios.get(this.url).then(response =>{
          this.ciudad = response.data
 
@@ -208,9 +198,9 @@ export default {
          this.estados = response.data
        });
      },
-	
+
     },
-      
+
 };
 </script>
 <style scoped>
@@ -236,14 +226,14 @@ export default {
     font-size: 14px;
     text-transform: uppercase;
     font-weight: 500;
-    opacity: 1;  
+    opacity: 1;
     line-height: 32px;
     letter-spacing: 0;
     border-radius: 3px;
     -webkit-font-smoothing: antialiased;
 }
 p{
-	color: black;	
+	color: black;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 	font: Roboto;
 	font-size: 20px;
@@ -252,14 +242,14 @@ p{
 .button--light {
   background-color: transparent;
   color: #9E9898;
-  border: 1px solid rgba(0,0,0,0.2); 
+  border: 1px solid rgba(0,0,0,0.2);
 }
 .button--light:active {
   background-color: rgba(0,0,0,0.05);
   color: #9E9898;
   border: 1px solid rgba(0,0,0,0.2);
   opacity: 3;
- 
+
 }
 .toolbar--material{
 	background-color: purple;
@@ -269,13 +259,13 @@ h4{
     font-size: 12px;
     color: red;
     line-height: 0px;
-    
+
 }
 h5{
     font-size: 12px;
     color: #26a69a;
     line-height: 0px;
-    
+
 }
 .al{
     margin-left: 45px;

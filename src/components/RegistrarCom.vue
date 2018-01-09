@@ -153,8 +153,7 @@ import auth from '../auth'
    methods:{
      // Metodo para almacenar usuario y sus credenciales
      submit(){
-       window.alert(this.userCom.email + this.userCom.password + this.userCom.estado +'  '+ this.userCom.ciu+ this.userCom.direccion)
-       var crede = {
+    var crede = {
          username:this.userCom.email,
          password1:this.userCom.password,
          password2:this.userCom.password,
