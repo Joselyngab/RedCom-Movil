@@ -80,7 +80,10 @@
                      <v-text-area name="contenido" id="contenido" length="50" v-model="userCom.direccion" required></v-text-area>
                      <label for="text"><i class="material-icons">pin_drop</i>Dirección</label>
                 </div>
+<<<<<<< HEAD
                 </div>
+=======
+>>>>>>> 2446a1de1ff97490f05b95852813037ab5f93e07
                  </div>
                   <v-ons-dialog cancelable :visible.sync="mostrar">
                     <p style="text-align: center">Error al ingresar los datos</p>
