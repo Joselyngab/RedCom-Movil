@@ -25,10 +25,6 @@
                 </router-link>
             </div>
                     <div class="card__imagen posti" >
-
-                        <img :src="publ.img" style="width: 100%">
-
-
                     </div>
                     <div class="card_content"  >
                       <p style="color: black;">{{publ.contenido}}</p>
@@ -71,9 +67,9 @@ import Comentarios from './Comentario.vue'
 import axios from 'axios'
 export default {
   name: 'post',
-   created: function() {
+   beforeCreated: function() {
      this.getPublicac();
-     this.getUser();
+     this.getUser1();
      this.postMuro();
   },
 
@@ -98,47 +94,32 @@ export default {
           autor:'',
           url: '',
           muro: [],
+          us:{},
       }
   },
   methods: {
-   /*  getPub: function(){
-       axios.get('http://127.0.0.1:8000/api/publicacion/?format=json',{
-          headers: {Authorization: `JWT ${auth.getAuthHeader()}`}
-       }).then(response =>{
-         this.publicacion= response.data
-         this.p=auth.getUser();
-        });
-      },*/
-        //método que se ejecuta en created para llenar el arreglo estados con los estados de venezuela
-      getPublicac: function(){
-       axios.get('http://127.0.0.1:8000/api/publicacion/?format=json').then(response =>{
-         this.publicacion = response.data
-       });
+    getPub: function(){
 
-
-
+         this.publicacion= auth.checkTipoUser();
+        },
      },
-     getUser: function(){
+     getUser1: function(){
+        this.user1=auth.getUser();
+       },
 
-          axios.get('http://127.0.0.1:8000/api/user/5a4bfc1601f12f216cfa54e0/?format=json').then(response =>{
-         this.user1 = response.data
-       });
-       console.log(this.user1.name)
-       return this.user1.name
-     },
      postMuro:function(){
        console.log(this.user1.name)
        if(this.user1.seguidos.length == 0)
          {
            for (i=0; i<this.publicacion.length; i++){
-            if(this.publicacion[i].autor == '5a4bfc1601f12f216cfa54e0')
+            if(this.publicacion[i].autor == this.user1.id)
                 this.muro.push(this.publicacion[i])
             }
          }
          else{
            for (i=0; i<this.publicacion.length; i++){
              for (j=0; j<this.user1.seguidos.length; j++){
-                if((this.publicacion[i].autor == this.user1.seguidos[j]) || (this.publicacion[i].autor == '5a4bfc1601f12f216cfa54e0'))
+                if((this.publicacion[i].autor == this.user1.seguidos[j]) || (this.publicacion[i].autor == this.user1.id))
                     this.muro.push(this.publicacion[i])
                 }
              }
@@ -146,36 +127,12 @@ export default {
          }
          console.log(this.muro)
      },
-     buscarUser: function (idU){
-       axios.get('http://127.0.0.1:8000/api/user/'+idU+'/?format=json').then(response =>{
-         this.user = response.data
-       });
-       return this.user.name
-
-     },
        getDetalle: function(id){
-
 
         this.url = '/detallepost/?id='+id;
         console.log(this.url)
     },
-      buscarImg: function(idP)
-     {
-       axios.get('http://127.0.0.1:8000/api/publicacion/'+idP+'/?format=json').then(response =>{
-         this.publi = response.data
-       });
-       console.log('ok1')
-       this.img='../assets/img/'+this.publi.img
-       return this.img
-     },
-     buscarCat: function (idC){
-       axios.get('http://127.0.0.1:8000/api/categoriapost/'+idC+'/?format=json').then(response =>{
-         this.categoria = response.data
-       });
-       console.log('ok2')
-      },
 
-  },
 
 
 

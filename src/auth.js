@@ -48,6 +48,26 @@ export default {
     valido: false,
     alma: false,
 
+    post: {
+        autor: '',
+        titulo: '',
+        img: '',
+        contenido: '',
+        categoria: '',
+        estado: '',
+        ciudad: '',
+        direccion: '',
+        fecha_update: { type: Date },
+        tags: [],
+        likes: 0,
+        comentarios: [],
+        activa: { type: Boolean },
+        respaldos: [],
+    },
+    posts: { type: Array },
+    posts: [],
+    postsEnte: { type: Array },
+    postsEnte: [],
     //Envia una solicitud para iniciar sesion y validar usuario y obtener el token de acceso  JWT
     login(creds, redirect) {
         axios.post(LOGIN_URL, creds).then(response => {
@@ -134,6 +154,33 @@ export default {
     },
     getUser() {
         return this.user;
+    },
+    getPosts() {
+        axios.get(POST_URL, {
+                headers: { Authorization: `JWT ${auth.getAuthHeader()}` }
+            }).then(response => {
+                this.posts = response.data
+            })
+            .catch(erros => {
+                console.log(error);
+            })
+        return this.posts;
+    },
+
+    checkTipoUser() {
+        var a = getUser()
+        var p = getPosts()
+        if (a._cls = "User.Ente") {
+            for (var i = 0; i < p.length; i++) {
+                if (a.area == p[i].categoria) {
+                    this.postsEnte.push(p[i]);
+                }
+            }
+            return this.postsEnte;
+
+        } else {
+            return p;
+        }
     },
 
     // Metodo para crear una nueva publicacion
