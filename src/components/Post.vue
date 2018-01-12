@@ -10,11 +10,9 @@
                 <div class="col">
                  <div class="f1">
                      <!--  <h4>{{p.authenticated}}</h4>-->
-                     <h4>{{buscarUser(publ.autor)}}</h4>
-
+                     <h4>{{publ.nombreautor}}</h4>
                   </div>
                   <div class="f2">
-
                       <h6>Hace 2 minutos</h6>
                   </div>
                 </div>
