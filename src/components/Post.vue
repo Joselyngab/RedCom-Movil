@@ -87,7 +87,7 @@ export default {
 
           publicacion:[],
           user: [],
-           user1: [],
+          user1: [],
           categoria: [],
           autor:'',
           url: '',
